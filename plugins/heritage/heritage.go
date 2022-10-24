@@ -92,24 +92,27 @@ func init() {
 	})
 
 	//new . content
-	w.OnHTML("#block-mainpagecontent > article > div > div > div", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
+	w.OnHTML(".article__body-copy", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
 		ctx.Content = element.Text
 	})
+
 	//new . publish_time
 	w.OnHTML("div.article-general-info", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
 		ctx.PublicationTime = element.Text
 	})
+
 	//new . author_url
-	w.OnHTML(" div.commentary__intro-wrapper > a", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
-		ctx.Authors = append(ctx.Authors, element.Attr("href"))
+	w.OnHTML(".author-card__name", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
+		ctx.Authors = append(ctx.Authors, element.Text)
 	})
+
 	// new. keyword
-	w.OnHTML(" div.key-takeaways__takeaway > p", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
+	w.OnHTML("div.key-takeaways__takeaway > p", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
 		ctx.Keywords = append(ctx.Keywords, element.Text)
 	})
 
 	// new .image
-	w.OnHTML(" figure.image-with-caption__image-wrapper > img ", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
+	w.OnHTML("figure.image-with-caption__image-wrapper > img ", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
 		ctx.Image = append(ctx.Keywords, element.Attr("srcset"))
 	})
 
