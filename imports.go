@@ -1,6 +1,6 @@
 package main
 
 import (
-	_ "megaCrawler/plugins/csis"
+	//_ "megaCrawler/plugins/csis"
 	_ "megaCrawler/plugins/heritage"
 )
