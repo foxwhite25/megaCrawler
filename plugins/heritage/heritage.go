@@ -2,12 +2,8 @@ package heritage
 
 import (
 	"github.com/gocolly/colly/v2"
-	_ "github.com/gocolly/colly/v2"
 	"megaCrawler/megaCrawler"
-	_ "megaCrawler/megaCrawler"
-	_ "regexp"
 	"strings"
-	_ "strings"
 )
 
 func init() {
