@@ -3,6 +3,7 @@ package cap
 import (
 	"github.com/gocolly/colly/v2"
 	"megaCrawler/megaCrawler"
+	"strings"
 )
 
 func init() {
@@ -63,8 +64,8 @@ func init() {
 	})
 
 	//作者
-	w.OnHTML(" div.header2-wrap > div.header2-side > div.authors1 > ul > li > a", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
-		ctx.Authors = append(ctx.Authors, element.Text)
+	w.OnHTML(" div.header2-wrap > div.header2-side > div.authors1 > ul > li", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
+		ctx.Authors = append(ctx.Authors, strings.TrimSpace(element.Text))
 	})
 
 	//时间
