@@ -41,7 +41,7 @@ type urlData struct {
 
 func (w *WebsiteEngine) Visit(url string, pageType PageType) {
 	if url == "" {
-		w.UrlData <- urlData{Url: nil, PageType: pageType}
+		return
 	}
 
 	u, err := w.BaseUrl.Parse(url)
@@ -98,7 +98,6 @@ func (w *WebsiteEngine) ApplyTemplate(template Template) *WebsiteEngine {
 func (w *WebsiteEngine) getCollector() (c *colly.Collector, ok error) {
 	cc := w.UrlProcessor
 	c = colly.NewCollector(
-		colly.ParseHTTPErrorResponse(),
 		colly.Async(true),
 	)
 	extensions.RandomUserAgent(c)
@@ -107,7 +106,7 @@ func (w *WebsiteEngine) getCollector() (c *colly.Collector, ok error) {
 	err := c.Limit(&colly.LimitRule{
 		RandomDelay: 5 * time.Second,
 		DomainGlob:  cc.domainGlob,
-		Parallelism: 16,
+		Parallelism: Threads,
 	})
 
 	c.SetRequestTimeout(cc.timeout)
@@ -132,11 +131,6 @@ func (w *WebsiteEngine) getCollector() (c *colly.Collector, ok error) {
 	}
 
 	c.OnError(func(r *colly.Response, err error) {
-		if err.Error() == "Bad Gateway" || err.Error() == "Not Found" || err.Error() == "Forbidden" {
-			_ = w.bar.Add(1)
-			w.WG.Done()
-			return
-		}
 		if err.Error() == "Too many requests" {
 			time.Sleep(time.Duration(rand.Intn(10)) * time.Second)
 		}
@@ -147,6 +141,7 @@ func (w *WebsiteEngine) getCollector() (c *colly.Collector, ok error) {
 			w.WG.Done()
 			sugar.Errorf("Max retries exceed for %s: %s", r.Request.URL.String(), err.Error())
 		} else {
+			time.Sleep(time.Duration(rand.Intn(10)) * time.Second)
 			sugar.Debugf("Website error tries %d for %s: %s", left, r.Request.URL.String(), err.Error())
 		}
 	})
@@ -178,6 +173,9 @@ func (w *WebsiteEngine) processUrl() (data []*Context, err error) {
 		}
 		_ = w.bar.Add(1)
 		ctx := response.Ctx.GetAny("ctx").(*Context)
+		if ctx.Title == "" && ctx.PageType != Index {
+			sugar.Debugw("Empty Page", "Body", string(response.Body), "Status", response.StatusCode, "Url", ctx.Url)
+		}
 		ctx.CrawlTime = time.Now()
 		go ctx.process()
 		data = append(data, ctx)
@@ -191,7 +189,22 @@ func (w *WebsiteEngine) processUrl() (data []*Context, err error) {
 				break
 			}
 			ctx := colly.NewContext()
-			ctx.Put("ctx", &Context{PageType: k.PageType, Url: k.Url.String(), Host: k.Url.Host, Website: w.Id})
+
+			ctx.Put("ctx", &Context{
+				PageType:  k.PageType,
+				Authors:   []string{},
+				Image:     []string{},
+				Video:     []string{},
+				Audio:     []string{},
+				File:      []string{},
+				Link:      []string{},
+				Tags:      []string{},
+				Keywords:  []string{},
+				Url:       k.Url.String(),
+				Host:      k.Url.Host,
+				Website:   w.Id,
+				CrawlTime: time.Time{},
+			})
 			w.WG.Add(1)
 			err := c.Request("GET", k.Url.String(), nil, ctx, nil)
 			if err != nil {
