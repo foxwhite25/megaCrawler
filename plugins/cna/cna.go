@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	w := megaCrawler.Register("csis", "战略与国际研究中心", "https://www.cna.org/")
+	w := megaCrawler.Register("cna", "海军分析中心", "https://www.cna.org/")
 
 	w.SetStartingUrls([]string{"https://www.cna.org/expertise/data-and-architecture-management",
 		"https://www.cna.org/expertise/domestic-safety-and-security",
