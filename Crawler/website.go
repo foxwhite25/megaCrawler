@@ -1,16 +1,17 @@
-package megaCrawler
+package Crawler
 
 import (
 	"encoding/json"
 	"github.com/go-co-op/gocron"
 	"github.com/gocolly/colly/v2"
 	"github.com/gocolly/colly/v2/extensions"
+	tld "github.com/jpillora/go-tld"
 	"github.com/schollz/progressbar/v3"
 	"github.com/temoto/robotstxt"
 	"io/ioutil"
 	"math/rand"
-	"megaCrawler/megaCrawler/commands"
-	"megaCrawler/megaCrawler/config"
+	"megaCrawler/Crawler/commands"
+	"megaCrawler/Crawler/config"
 	"net/http"
 	"net/url"
 	"strings"
@@ -20,7 +21,7 @@ import (
 
 type WebsiteEngine struct {
 	Id           string
-	BaseUrl      url.URL
+	BaseUrl      tld.URL
 	IsRunning    bool
 	Disabled     bool
 	bar          *progressbar.ProgressBar
@@ -45,7 +46,11 @@ func (w *WebsiteEngine) Visit(url string, pageType PageType) {
 	}
 
 	u, err := w.BaseUrl.Parse(url)
-	if err != nil || u.Host != w.BaseUrl.Host {
+	if err != nil {
+		return
+	}
+	topLevel, _ := tld.Parse(u.String())
+	if topLevel.Domain != w.BaseUrl.Domain || topLevel.TLD != w.BaseUrl.TLD {
 		return
 	}
 
@@ -291,7 +296,7 @@ func (w *WebsiteEngine) toJson() (b []byte, err error) {
 	return
 }
 
-func NewEngine(id string, baseUrl url.URL) (we *WebsiteEngine) {
+func NewEngine(id string, baseUrl tld.URL) (we *WebsiteEngine) {
 	we = &WebsiteEngine{
 		WG:         &sync.WaitGroup{},
 		Id:         id,
