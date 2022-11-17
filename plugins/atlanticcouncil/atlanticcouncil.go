@@ -218,9 +218,6 @@ func init() {
 	w.OnHTML("#content > section > div > div > div > p", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
 		ctx.Content = ctx.Content + element.Text
 	})
-	w.OnHTML("#content > section > div > div > div > h2", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
-		ctx.Content = ctx.Content + element.Text
-	})
 
 	// 从翻页器获取链接并访问
 	w.OnHTML(" div.j-posts--pagination.columns-12.o-archives--pagination > a", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
