@@ -213,6 +213,15 @@ func init() {
 	// interview
 	//访问new
 
+	//内容一般处理
+	//new .content
+	w.OnHTML("#content > section > div > div > div > p", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
+		ctx.Content = ctx.Content + element.Text
+	})
+	w.OnHTML("#content > section > div > div > div > h2", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
+		ctx.Content = ctx.Content + element.Text
+	})
+
 	// 从翻页器获取链接并访问
 	w.OnHTML(" div.j-posts--pagination.columns-12.o-archives--pagination > a", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
 		w.Visit(element.Attr("href"), megaCrawler.Index)
@@ -241,35 +250,10 @@ func init() {
 		ctx.Authors = append(ctx.Authors, element.Text)
 	})
 	//
-	// new .content
-	w.OnHTML("#content > section > div > div > div", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
-		ctx.Content = element.Text
-	})
 
 	// new.description
 	w.OnHTML("#content > section > div > div > div > p:nth-child(2)", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
 		ctx.Description = element.Text
-	})
-
-	//Blog Post
-
-	// new.category
-	w.OnHTML("p.gta-site-banner--expert-author.upper > span > a", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
-		ctx.CategoryText = element.Text
-	})
-	//new.publish time
-	w.OnHTML("div.gta-site-banner--heading.gta-post-site-banner--heading > p.gta-site-banner--heading--date.gta-post-site-banner--heading--date", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
-		ctx.PublicationTime = element.Text
-	})
-
-	// new.title
-	w.OnHTML("#masthead > section > div > div > h2", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
-		ctx.Title = element.Text
-	})
-
-	// new .content
-	w.OnHTML("#content > section > div > div > div", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
-		ctx.Content = element.Text
 	})
 
 	//in the news
@@ -290,11 +274,6 @@ func init() {
 		ctx.Link = append(ctx.Link, element.Attr("href"))
 	})
 
-	//new .content
-	w.OnHTML("#content > section > div > div > div > p", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
-		ctx.Content = ctx.Content + element.Text
-	})
-
 	//Econographics
 	// new.category
 	w.OnHTML(" p.ac-single-post--marquee--expert-author.upper > span > a", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
@@ -313,16 +292,13 @@ func init() {
 	w.OnHTML("a.gta-site-banner--tax--expert", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
 		ctx.Authors = append(ctx.Authors, element.Text)
 	})
-	//new .content
-	w.OnHTML("#content > section > div > div > div", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
-		ctx.Content = element.Text
-	})
 
 	//report
 	// new.category
 	w.OnHTML("p.gta-site-banner--expert-author.upper > span > a", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
 		ctx.CategoryText = element.Text
 	})
+
 	//new.publish time
 	w.OnHTML("div.gta-site-banner--heading.gta-post-site-banner--heading > p.gta-site-banner--heading--date.gta-post-site-banner--heading--date", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
 		ctx.PublicationTime = element.Text
@@ -336,11 +312,6 @@ func init() {
 	// report.author
 	w.OnHTML(" a.gta-site-banner--tax--expert", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
 		ctx.Authors = append(ctx.Authors, element.Text)
-	})
-	//
-	// new .content
-	w.OnHTML("#content > section > div > div > div", func(element *colly.HTMLElement, ctx *megaCrawler.Context) {
-		ctx.Content = element.Text
 	})
 
 	// new.description
