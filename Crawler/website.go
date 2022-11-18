@@ -108,6 +108,13 @@ func (w *WebsiteEngine) getCollector() (c *colly.Collector, ok error) {
 	extensions.RandomUserAgent(c)
 	extensions.Referer(c)
 
+	if Proxy != nil {
+		err := c.SetProxy(Proxy.String())
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	err := c.Limit(&colly.LimitRule{
 		RandomDelay: 5 * time.Second,
 		DomainGlob:  cc.domainGlob,
@@ -144,7 +151,7 @@ func (w *WebsiteEngine) getCollector() (c *colly.Collector, ok error) {
 		if left == 0 {
 			_ = w.bar.Add(1)
 			w.WG.Done()
-			Sugar.Errorf("Max retries exceed for %s: %s", r.Request.URL.String(), err.Error())
+			Sugar.Errorw("Max retries exceed.", "Url", r.Request.URL.String(), "Error", err.Error(), "DOM", string(r.Body))
 		} else {
 			time.Sleep(time.Duration(rand.Intn(10)) * time.Second)
 			Sugar.Debugf("Website error tries %d for %s: %s", left, r.Request.URL.String(), err.Error())
@@ -181,7 +188,7 @@ func (w *WebsiteEngine) processUrl() (data []*Context, err error) {
 		ctx.CrawlTime = time.Now()
 		go func() {
 			if !ctx.process() {
-				Sugar.Debugw("Empty Page", spread(*ctx)...)
+				Sugar.Debugw("Empty Page", append([]interface{}{"dom", string(response.Body)}, spread(*ctx)...)...)
 				RetryRequest(response.Request, 10)
 			} else {
 				w.WG.Done()
@@ -199,19 +206,20 @@ func (w *WebsiteEngine) processUrl() (data []*Context, err error) {
 			ctx := colly.NewContext()
 
 			ctx.Put("ctx", &Context{
-				PageType:  k.PageType,
-				Authors:   []string{},
-				Image:     []string{},
-				Video:     []string{},
-				Audio:     []string{},
-				File:      []string{},
-				Link:      []string{},
-				Tags:      []string{},
-				Keywords:  []string{},
-				Url:       k.Url.String(),
-				Host:      k.Url.Host,
-				Website:   w.Id,
-				CrawlTime: time.Time{},
+				PageType:   k.PageType,
+				Authors:    []string{},
+				Image:      []string{},
+				Video:      []string{},
+				Audio:      []string{},
+				File:       []string{},
+				Link:       []string{},
+				Tags:       []string{},
+				Keywords:   []string{},
+				SubContext: []*Context{},
+				Url:        k.Url.String(),
+				Host:       k.Url.Host,
+				Website:    w.Id,
+				CrawlTime:  time.Time{},
 			})
 			w.WG.Add(1)
 			err := c.Request("GET", k.Url.String(), nil, ctx, nil)
