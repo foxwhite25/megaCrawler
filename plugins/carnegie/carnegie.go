@@ -25,7 +25,7 @@ func init() {
 	})
 
 	//专家介绍
-	w.OnHTML("#bio-panel > div > p", func(element *colly.HTMLElement, ctx *Crawler.Context) {
+	w.OnHTML("#bio-panel", func(element *colly.HTMLElement, ctx *Crawler.Context) {
 		ctx.Description = element.Text
 	})
 
@@ -60,7 +60,7 @@ func init() {
 	})
 
 	//获取正文
-	w.OnHTML(" div.zone-1 > div > div.article-body > p", func(element *colly.HTMLElement, ctx *Crawler.Context) {
+	w.OnHTML(".article-body", func(element *colly.HTMLElement, ctx *Crawler.Context) {
 		ctx.Content = element.Text
 	})
 
