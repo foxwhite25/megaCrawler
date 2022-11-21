@@ -143,6 +143,11 @@ func (w *WebsiteEngine) getCollector() (c *colly.Collector, ok error) {
 	}
 
 	c.OnError(func(r *colly.Response, err error) {
+		if err.Error() == "Not Found" {
+			_ = w.bar.Add(1)
+			w.WG.Done()
+			return
+		}
 		if err.Error() == "Too many requests" {
 			time.Sleep(time.Duration(rand.Intn(10)) * time.Second)
 		}
