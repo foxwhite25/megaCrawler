@@ -7,9 +7,7 @@ import (
 
 func init() {
 	w := Crawler.Register("nbr", "国家亚洲研究局海洋意识项目", "https://map.nbr.org/")
-	w.SetStartingUrls([]string{"https://map.nbr.org/interactive/incident-timeline/",
-		"https://map.nbr.org/category/analysis/",
-		"https://map.nbr.org/category/international-expert-panel/"})
+	w.SetStartingUrls([]string{"https://map.nbr.org/interactive/incident-timeline/", "https://map.nbr.org/category/analysis/", "https://map.nbr.org/category/international-expert-panel/"})
 
 	//index
 	w.OnHTML("a.page-numbers.next", func(element *colly.HTMLElement, ctx *Crawler.Context) {
