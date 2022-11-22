@@ -52,9 +52,9 @@ func init() {
 
 	//正文
 	w.OnHTML(" section > div > div > p", func(element *colly.HTMLElement, ctx *Crawler.Context) {
-		ctx.Content = element.Text
+		ctx.Content += element.Text
 	})
 	w.OnHTML(" section > div > p", func(element *colly.HTMLElement, ctx *Crawler.Context) {
-		ctx.Content = element.Text
+		ctx.Content += element.Text
 	})
 }

@@ -29,7 +29,7 @@ func init() {
 
 	//获取正文
 	w.OnHTML("div > div > div > div > div > div > p", func(element *colly.HTMLElement, ctx *Crawler.Context) {
-		ctx.Content = element.Text
+		ctx.Content += element.Text
 	})
 
 	//report

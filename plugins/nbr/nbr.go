@@ -48,9 +48,9 @@ func init() {
 	//获取正文,描述
 	w.OnHTML("div > div > section> div > div > div > div > div > div > div > p", func(element *colly.HTMLElement, ctx *Crawler.Context) {
 		if ctx.PageType == Crawler.Report {
-			ctx.Content = element.Text
+			ctx.Content += element.Text
 		} else if ctx.PageType == Crawler.Expert {
-			ctx.Description = element.Text
+			ctx.Description += element.Text
 		}
 	})
 

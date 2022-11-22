@@ -3,8 +3,18 @@ package diis
 import (
 	"github.com/gocolly/colly/v2"
 	"megaCrawler/Crawler"
+	"strings"
 )
 
+func cutToList(inputStr string) []string {
+	nameStr := strings.Replace(inputStr, "&", ",", -1)
+	nameList := strings.Split(nameStr, ",")
+	for index, value := range nameList {
+		nameList[index] = strings.TrimSpace(value)
+	}
+
+	return nameList
+}
 func init() {
 	w := Crawler.Register("diis", "国际问题研究所", "https://www.diis.dk/en")
 	w.SetStartingUrls([]string{"https://www.diis.dk/en", "https://www.diis.dk/en/experts"})
@@ -21,9 +31,10 @@ func init() {
 	})
 
 	//访问experts
-	w.OnHTML("div.field.node-title > h2 > a", func(element *colly.HTMLElement, ctx *Crawler.Context) {
-		w.Visit(element.Attr("href"), Crawler.Expert)
-	})
+	w.OnHTML("body > div > main > div > div > article > div.inner > div.alpha > div.views-element-container > div > div.view-content > div > ul > li > div > div > div.beta > div.group-content-wrapper > div.field.node-title > h2 > a",
+		func(element *colly.HTMLElement, ctx *Crawler.Context) {
+			w.Visit(element.Attr("href"), Crawler.Expert)
+		})
 
 	//获取姓名
 	w.OnHTML("body > div > main > div > div > article > div.inner > div.beta > div.group-content-top > div.field.node-title > h1", func(element *colly.HTMLElement, ctx *Crawler.Context) {
@@ -70,7 +81,7 @@ func init() {
 
 	//获取作者
 	w.OnHTML("body > div > main > div > div > article > div.inner > div.alpha > div.group-content-top > div.field.field-byline", func(element *colly.HTMLElement, ctx *Crawler.Context) {
-		ctx.Authors = append(ctx.Authors, element.Text)
+		ctx.Authors = cutToList(element.Text)
 	})
 
 	//获取时间

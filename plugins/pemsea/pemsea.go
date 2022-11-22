@@ -28,7 +28,6 @@ func init() {
 	w.OnHTML("page-title", func(element *colly.HTMLElement, ctx *Crawler.Context) {
 		ctx.Title = element.Text
 	})
-
 	//时间
 	w.OnHTML("p.submitted", func(element *colly.HTMLElement, ctx *Crawler.Context) {
 		ctx.PublicationTime = element.Text
@@ -36,7 +35,7 @@ func init() {
 
 	//正文
 	w.OnHTML(" div > div > p", func(element *colly.HTMLElement, ctx *Crawler.Context) {
-		ctx.Content = element.Text
+		ctx.Content += element.Text
 	})
 
 	//pdf
