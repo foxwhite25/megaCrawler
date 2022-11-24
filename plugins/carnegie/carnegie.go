@@ -3,8 +3,17 @@ package carnegie
 import (
 	"github.com/gocolly/colly/v2"
 	"megaCrawler/Crawler"
+	"strings"
 )
 
+func cutToList(inputStr string) []string {
+	nameList := strings.Split(inputStr, ",")
+	for index, value := range nameList {
+		nameList[index] = strings.TrimSpace(value)
+	}
+
+	return nameList
+}
 func init() {
 	w := Crawler.Register("carnegie", "卡内基欧洲中心", "https://carnegieeurope.eu/?lang=en")
 	w.SetStartingUrls([]string{"https://carnegieeurope.eu/publications/?lang=en", "https://carnegieeurope.eu/experts/?lang=en"})
@@ -26,7 +35,21 @@ func init() {
 
 	//专家介绍
 	w.OnHTML("#bio-panel > div > p", func(element *colly.HTMLElement, ctx *Crawler.Context) {
-		ctx.Description = element.Text
+		ctx.Description += element.Text
+	})
+
+	//专家邮箱
+	w.OnHTML("div.col.col-30.tablet-zero > div > div:nth-child(1) > div > div > ul > li:nth-child(1) > a", func(element *colly.HTMLElement, ctx *Crawler.Context) {
+		ctx.Email = element.Attr("href")
+	})
+
+	//专家领域
+	w.OnHTML("#expertCenterRegionTags > ul > li> a", func(element *colly.HTMLElement, ctx *Crawler.Context) {
+		ctx.Area += element.Text + " "
+	})
+	//专家
+	w.OnHTML("#expertCenterIssueTags > ul > li> a", func(element *colly.HTMLElement, ctx *Crawler.Context) {
+		ctx.Keywords = append(ctx.Keywords, element.Text)
 	})
 
 	//index
@@ -45,8 +68,8 @@ func init() {
 	})
 
 	//获取作者
-	w.OnHTML("div.container-headline.foreground > div > div.post-author.col.col-75", func(element *colly.HTMLElement, ctx *Crawler.Context) {
-		ctx.Authors = append(ctx.Authors, element.Text)
+	w.OnHTML("post-author", func(element *colly.HTMLElement, ctx *Crawler.Context) {
+		ctx.Authors = cutToList(element.Text)
 	})
 
 	//获取时间
@@ -61,7 +84,7 @@ func init() {
 
 	//获取正文
 	w.OnHTML(" div.zone-1 > div > div.article-body > p", func(element *colly.HTMLElement, ctx *Crawler.Context) {
-		ctx.Content = element.Text
+		ctx.Content += element.Text
 	})
 
 	//标签

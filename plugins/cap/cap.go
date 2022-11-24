@@ -29,7 +29,7 @@ func init() {
 
 	//专家介绍
 	w.OnHTML(" div > div.-xw\\:4.-mx\\:a.-mb\\:3 > div > p", func(element *colly.HTMLElement, ctx *Crawler.Context) {
-		ctx.Description = element.Text
+		ctx.Description += element.Text
 	})
 
 	//专家图片
@@ -60,7 +60,7 @@ func init() {
 
 	//报告摘要
 	w.OnHTML(" div > header > div.header2-wrap > div.header2-main > p", func(element *colly.HTMLElement, ctx *Crawler.Context) {
-		ctx.Description = element.Text
+		ctx.Description += element.Text
 	})
 
 	//作者
