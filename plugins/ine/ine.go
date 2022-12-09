@@ -17,7 +17,12 @@ func cutToList(inputStr string) []string {
 
 func init() {
 	w := Crawler.Register("ine", "西班牙国家统计局", "https://www.ine.es/")
-	w.SetStartingUrls([]string{"https://www.ine.es/ss/Satellite?L=en_GB&c=Page&cid=1254735839320&p=1254735839320&pagename=MetodologiaYEstandares%2FINELayout"})
+	w.SetStartingUrls([]string{"https://www.ine.es/en/index.htm"})
+
+	//index
+	w.OnHTML("#accor1_B3_A1 > li:nth-child(6) > a", func(element *colly.HTMLElement, ctx *Crawler.Context) {
+		w.Visit(element.Attr("href"), Crawler.Index)
+	})
 
 	//访问报告
 	w.OnHTML("table > tbody > tr> td> a", func(element *colly.HTMLElement, ctx *Crawler.Context) {
