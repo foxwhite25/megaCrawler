@@ -6,8 +6,8 @@ import (
 )
 
 func init() {
-	w := Crawler.Register("carnegieendowment", "卡内基国际和平基金会",
-		"https://carnegieendowment.org/")
+	w := Crawler.Register("nupi", "国际事务研究所",
+		"https://www.nupi.no/")
 
 	w.SetStartingUrls([]string{
 		"https://www.nupi.no/en/our-research/topics/defence-and-security/intelligence",
