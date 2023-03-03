@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
@@ -9,9 +9,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1141", "中美研究中心", "https://chinaus-icas.org")
+	engine := crawlers.Register("1118", "华府公民道德责任组织", "https://www.citizensforethics.org")
 
-	engine.SetStartingURLs([]string{"https://chinaus-icas.org/research-sitemap.xml", "https://chinaus-icas.org/icas_in_the_news-sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://www.citizensforethics.org/post-sitemap.xml", "https://www.citizensforethics.org/reports-sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -27,11 +27,14 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		switch {
-		case strings.Contains(ctx.URL, "icas_in_the_news-sitemap.xml"):
+		if strings.Contains(ctx.URL, "post-sitemap.xml") {
 			engine.Visit(element.Text, crawlers.News)
-		case strings.Contains(ctx.URL, "research-sitemap.xml"):
+		} else if strings.Contains(ctx.URL, "reports-sitemap.xml") {
 			engine.Visit(element.Text, crawlers.Report)
 		}
+	})
+
+	engine.OnHTML(".actions-latest-update__date", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.PublicationTime = element.Text
 	})
 }
