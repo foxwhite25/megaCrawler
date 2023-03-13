@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"strings"
@@ -10,9 +10,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1253", "德国马歇尔基金", "https://www.gmfus.org")
+	engine := crawlers.Register("1271", "悉尼科技大学", "https://www.uts.edu.au")
 
-	engine.SetStartingURLs([]string{"https://www.gmfus.org/sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://www.uts.edu.au/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,

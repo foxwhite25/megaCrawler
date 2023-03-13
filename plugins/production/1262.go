@@ -1,8 +1,6 @@
-package dev
+package production
 
 import (
-	"strings"
-
 	"github.com/gocolly/colly/v2"
 
 	"megaCrawler/crawlers"
@@ -10,9 +8,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1255", "民主联盟", "https://www.thealliancefordemocracy.org")
+	engine := crawlers.Register("1262", "ARC极端气候卓越中心", "https://climateextremes.org.au")
 
-	engine.SetStartingURLs([]string{"http://www.thealliancefordemocracy.org/sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://climateextremes.org.au/post-sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -28,8 +26,6 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Text, "/blog/") {
-			engine.Visit(element.Text, crawlers.News)
-		}
+		engine.Visit(element.Text, crawlers.News)
 	})
 }

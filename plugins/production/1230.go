@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"github.com/gocolly/colly/v2"
@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1262", "ARC极端气候卓越中心", "https://climateextremes.org.au")
+	engine := crawlers.Register("1230", "Integrated Development Studies Institute", "https://idsicenter.com")
 
-	engine.SetStartingURLs([]string{"https://climateextremes.org.au/post-sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://idsicenter.com/wp-sitemap-posts-post-1.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,

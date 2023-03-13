@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"strings"
@@ -10,9 +10,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1271", "悉尼科技大学", "https://www.uts.edu.au")
+	engine := crawlers.Register("1272", "国际应用系统分析研究所", "https://iiasa.ac.at")
 
-	engine.SetStartingURLs([]string{"https://www.uts.edu.au/sitemap.xml"})
+	engine.SetStartingURLs([]string{})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -31,6 +31,8 @@ func init() {
 		switch {
 		case strings.Contains(element.Text, ".xml"):
 			engine.Visit(element.Text, crawlers.Index)
+		case strings.Contains(element.Text, "/staff/"):
+			engine.Visit(element.Text, crawlers.Expert)
 		case strings.Contains(element.Text, "/news/"):
 			engine.Visit(element.Text, crawlers.News)
 		}
