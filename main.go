@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	crawlers.Start()
+	crawlers.Start() // :)
 }
