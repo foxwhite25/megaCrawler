@@ -1,0 +1,40 @@
+package dev
+
+import (
+	"megaCrawler/crawlers"
+	"megaCrawler/extractors"
+
+	"github.com/gocolly/colly/v2"
+)
+
+func init() {
+	engine := crawlers.Register("1009", "Asia Maritime Transparency Initiative", "https://amti.csis.org/")
+
+	engine.SetStartingURLs([]string{"https://amti.csis.org/"})
+
+	extractorConfig := extractors.Config{
+		Author:       true,
+		Image:        true,
+		Language:     true,
+		PublishDate:  true,
+		Tags:         true,
+		Text:         false,
+		Title:        true,
+		TextLanguage: "",
+	}
+
+// Just a draft,please ignore it. 
+
+	extractorConfig.Apply(engine)
+
+	engine.OnResponse(func(response *colly.Response, ctx *crawlers.Context) {
+		println(string(response.Body))
+	})
+
+	engine.OnHTML("title", func(element *colly.HTMLElement, ctx *crawlers.Context) { //填写a的class
+		engine.Visit(element.Attr("href"), crawlers.News)
+	})
+	engine.OnHTML("entry-content", func(element *colly.HTMLElement, ctx *crawlers.Context) { //填写a的class
+		ctx.Content = element.Text
+	})
+}
