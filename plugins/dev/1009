@@ -23,7 +23,7 @@ func init() {
 		TextLanguage: "",
 	}
 
-// Just a draft,please ignore it. 
+	// Just a draft,please ignore it.
 
 	extractorConfig.Apply(engine)
 
@@ -34,7 +34,10 @@ func init() {
 	engine.OnHTML("title", func(element *colly.HTMLElement, ctx *crawlers.Context) { //填写a的class
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-	engine.OnHTML("entry-content", func(element *colly.HTMLElement, ctx *crawlers.Context) { //填写a的class
+	engine.OnHTML("#content > header > div > div > div > div > h1", func(element *colly.HTMLElement, ctx *crawlers.Context) { //填写a的class
+		ctx.Title = element.Text
+	})
+	engine.OnHTML("#post-32470 > div.entry-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) { //填写a的class
 		ctx.Content = element.Text
 	})
 }
