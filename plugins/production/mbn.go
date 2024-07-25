@@ -1,8 +1,9 @@
 package production
 
 import (
-	"megaCrawler/crawlers"
 	"strings"
+
+	"megaCrawler/crawlers"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -54,7 +55,7 @@ func init() {
 		w.Visit(element.Attr("href"), crawlers.News)
 	})
 	w.OnHTML(".time", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.PublicationTime = strings.Split(strings.Replace(element.Text, "기사입력", "", -1), "l")[0]
+		ctx.PublicationTime = strings.Split(strings.ReplaceAll(element.Text, "기사입력", ""), "l")[0]
 	})
 	w.OnHTML(".title_box", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Title += element.Text
