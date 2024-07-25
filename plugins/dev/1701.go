@@ -1,9 +1,10 @@
 package dev
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -34,11 +35,12 @@ func init() {
 		if strings.HasSuffix(element.Text, ".xml") {
 			return
 		}
-		if strings.Contains(element.Text, "expert") {
+		switch {
+		case strings.Contains(element.Text, "expert"):
 			engine.Visit(element.Text, crawlers.Expert)
-		} else if strings.Contains(element.Text, "report") {
+		case strings.Contains(element.Text, "report"):
 			engine.Visit(element.Text, crawlers.Report)
-		} else {
+		default:
 			engine.Visit(element.Text, crawlers.News)
 		}
 	})
