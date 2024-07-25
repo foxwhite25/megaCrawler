@@ -1,10 +1,11 @@
 package crawlers
 
 import (
-	"github.com/araddon/dateparse"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/araddon/dateparse"
 )
 
 var replacer = strings.NewReplacer(

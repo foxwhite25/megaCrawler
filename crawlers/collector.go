@@ -25,6 +25,7 @@ type CollectorConstructor struct {
 	htmlHandlers     []CollyHTMLPair
 	xmlHandlers      []XMLPair
 	responseHandlers []func(response *colly.Response, ctx *Context)
+	errorHandler     colly.ErrorCallback
 	launchHandler    func()
 }
 
