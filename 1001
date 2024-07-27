@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1701", "外交政策研究中心", "www.fpri.org")
+	engine := crawlers.Register("1701", "外交政策研究中心", "https://www.fpri.org")
 
-	engine.SetStartingURLs([]string{"www.fpri.org"})
+	engine.SetStartingURLs([]string{"https://www.fpri.org"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
