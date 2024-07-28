@@ -31,7 +31,7 @@ func init() {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
 	engine.OnHTML(".body > div > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content = element.Text
+		ctx.Content += element.Text
 	})
 	engine.OnHTML(".pager__item > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
