@@ -38,8 +38,8 @@ func init() {
 	engine.OnHTML(".person > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Expert)
 	})
-	engine.OnHTML(".rich-text > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content = element.Text
+	engine.OnHTML(".block > div > div > div > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
 	})
 }
 
