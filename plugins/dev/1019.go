@@ -26,22 +26,17 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnResponse(func(response *colly.Response, ctx *crawlers.Context) {
-		println(string(response.Body))
+	//XML
+	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
+		engine.Visit(element.Text, crawlers.News)
 	})
 
-	engine.OnHTML(".mec-color-hover", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.News)
+	engine.OnHTML(".entry-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
 	})
 
-	// 获取 Title
-	engine.OnHTML(".mec-single-title", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Title = strings.TrimSpace(element.Text)
-	})
-
-	// 获取 Content
-	engine.OnHTML(".mec-single-event-description mec-events-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content = element.Text
+	engine.OnHTML(".peopleinfo > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
 	})
 
 }
