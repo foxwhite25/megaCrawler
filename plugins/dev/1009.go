@@ -18,7 +18,7 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -31,6 +31,6 @@ func init() {
 	})
 
 	engine.OnHTML(".entry-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content = element.Text
+		ctx.Content += element.Text
 	})
 }
