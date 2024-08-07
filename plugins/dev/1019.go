@@ -3,7 +3,6 @@ package dev
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -11,7 +10,7 @@ import (
 func init() {
 	engine := crawlers.Register("1019", "Institute of Southeast Asian Studies", "https://www.iseas.edu.sg")
 
-	engine.SetStartingURLs([]string{"https://www.iseas.edu.sg"})
+	engine.SetStartingURLs([]string{"https://www.iseas.edu.sg/sitemap_index.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -20,7 +19,7 @@ func init() {
 		PublishDate:  true,
 		Tags:         true,
 		Text:         false,
-		Title:        false,
+		Title:        true,
 		TextLanguage: "",
 	}
 
