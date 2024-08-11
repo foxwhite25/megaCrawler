@@ -2,10 +2,11 @@ package crawlers
 
 import (
 	"encoding/json"
-	"github.com/jpillora/go-tld"
 	"net/url"
 	"strings"
 	"time"
+
+	"github.com/jpillora/go-tld"
 
 	"megaCrawler/crawlers/tester"
 )
