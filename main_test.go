@@ -19,7 +19,7 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-func TestWebMap(t *testing.T) {
+func TestWebMap(_ *testing.T) {
 	crawlers.Threads = 64
 	for _, v := range crawlers.WebMap {
 		println(v.BaseURL.Hostname())
@@ -140,4 +140,9 @@ func TestTester(t *testing.T) {
 		})
 	}
 	runner.Wait()
+}
+
+func TestName(t *testing.T) {
+	parseAny := crawlers.TimeCleanup("From 10 Sep 2019 9:00\n")
+	t.Log(parseAny)
 }

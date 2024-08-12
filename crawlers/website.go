@@ -104,6 +104,11 @@ func (w *WebsiteEngine) OnResponse(callback func(response *colly.Response, ctx *
 	return w
 }
 
+func (w *WebsiteEngine) ReplaceOnError(callback colly.ErrorCallback) *WebsiteEngine {
+	w.Collector.errorHandler = callback
+	return w
+}
+
 func (w *WebsiteEngine) OnLaunch(callback func()) *WebsiteEngine {
 	w.Collector.launchHandler = callback
 	return w
@@ -149,16 +154,12 @@ func (w *WebsiteEngine) getCollector() (c *colly.Collector, ok error) {
 			handler(response, response.Ctx.GetAny("ctx").(*Context))
 		})
 	}
+
 	c.OnRequest(func(r *colly.Request) {
 		Sugar.Debug("Visiting " + r.URL.String())
 	})
 
-	c.OnError(func(r *colly.Response, err error) {
-		if err.Error() == "Too many requests" {
-			time.Sleep(time.Duration(rand.Intn(10)) * time.Second)
-		}
-		RetryRequest(r.Request, err, w)
-	})
+	c.OnError(cc.errorHandler)
 	return
 }
 
@@ -324,6 +325,9 @@ func newContext(k urlData, w *WebsiteEngine) Context {
 		Host:       k.URL.Host,
 		Website:    w.ID,
 		CrawlTime:  time.Time{},
+
+		urlData: k.URL,
+		engine:  w,
 	}
 }
 
@@ -379,6 +383,12 @@ func NewEngine(id string, baseURL tld.URL) (we *WebsiteEngine) {
 			timeout:       10 * time.Second,
 			htmlHandlers:  []CollyHTMLPair{},
 			xmlHandlers:   []XMLPair{},
+			errorHandler: func(r *colly.Response, err error) {
+				if err.Error() == "Too many requests" {
+					time.Sleep(time.Duration(rand.Intn(10)) * time.Second)
+				}
+				RetryRequest(r.Request, err, we)
+			},
 		},
 		Scheduler: gocron.NewScheduler(time.Local),
 		bar: progressbar.NewOptions(
