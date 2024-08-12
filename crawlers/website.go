@@ -218,7 +218,7 @@ func (w *WebsiteEngine) processURL() (err error) {
 			return
 		}
 		ctx := response.Ctx.GetAny("ctx").(*Context)
-		if ctx.Type == "Index" {
+		if ctx.PageType == Index {
 			Sugar.Debug("Indexed " + response.Request.URL.String())
 		} else {
 			Sugar.Debug("Scraped " + response.Request.URL.String())
