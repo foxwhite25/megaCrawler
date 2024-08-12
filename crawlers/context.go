@@ -2,8 +2,11 @@ package crawlers
 
 import (
 	"encoding/json"
+	"net/url"
 	"strings"
 	"time"
+
+	"github.com/jpillora/go-tld"
 
 	"megaCrawler/crawlers/tester"
 )
@@ -64,6 +67,9 @@ type Context struct {
 	ExpertWebsite      string     `json:"expert_website"`
 	CrawlTime          time.Time  `json:"crawl_time"`
 	SubContext         []*Context `json:"subContext"`
+
+	urlData *url.URL
+	engine  *WebsiteEngine
 }
 
 type news struct {
@@ -177,9 +183,31 @@ func (ctx *Context) CreateSubContext() (k *Context) {
 		Host:       ctx.Host,
 		Website:    ctx.ID,
 		CrawlTime:  time.Time{},
+
+		urlData: ctx.urlData,
+		engine:  ctx.engine,
 	}
 	ctx.SubContext = append(ctx.SubContext, k)
 	return k
+}
+
+func (ctx *Context) Visit(url string, pageType PageType) {
+	if url == "" {
+		return
+	}
+
+	u, err := ctx.urlData.Parse(url)
+	if err != nil {
+		return
+	}
+	topLevel, err := tld.Parse(u.String())
+	if err != nil {
+		return
+	}
+	if topLevel.Domain != ctx.engine.BaseURL.Domain || topLevel.TLD != ctx.engine.BaseURL.TLD {
+		return
+	}
+	ctx.engine.URLChannel <- urlData{URL: u, PageType: pageType}
 }
 
 func (ctx *Context) process(tester *tester.Tester, engine string) (success bool) {

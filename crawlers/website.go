@@ -325,6 +325,9 @@ func newContext(k urlData, w *WebsiteEngine) Context {
 		Host:       k.URL.Host,
 		Website:    w.ID,
 		CrawlTime:  time.Time{},
+
+		urlData: k.URL,
+		engine:  w,
 	}
 }
 
