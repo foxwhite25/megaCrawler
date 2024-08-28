@@ -1,16 +1,17 @@
-package dev
+package storage
 
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	engine := crawlers.Register("1009", "Asia Maritime Transparency Initiative", "https://amti.csis.org/")
+	engine := crawlers.Register("1716", "菲律宾中华时报", "https://cthks.com/")
 
-	engine.SetStartingURLs([]string{"https://amti.csis.org/sitemap-1.xml"})
+	engine.SetStartingURLs([]string{"https://cthks.com/sitemap_index.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -25,12 +26,16 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	// XML
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
+		if strings.Contains(element.Text, "post-sitemap") {
+			engine.Visit(element.Text, crawlers.Index)
+			return
+		}
 		engine.Visit(element.Text, crawlers.News)
 	})
 
-	engine.OnHTML(".entry-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".td-post-content", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
+
 }
