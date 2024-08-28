@@ -17,7 +17,7 @@ func getMetaImgURL(dom *colly.HTMLElement) string {
 	if topMetaImage == "" {
 		topMetaImage = dom.ChildAttr("link[rel=\"icon\"]", "href")
 	}
-	if url, err := dom.Request.URL.Parse(topMetaImage); err != nil {
+	if url, err := dom.Request.URL.Parse(topMetaImage); err == nil {
 		return url.String()
 	} else {
 		return topMetaImage

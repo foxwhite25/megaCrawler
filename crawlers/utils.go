@@ -83,8 +83,11 @@ func spread(args interface{}) (k []interface{}) {
 	st := s.Type()
 
 	for i := 0; i < st.NumField(); i++ {
-		iField := s.Field(i)
 		tField := st.Field(i)
+		if !tField.IsExported() {
+			continue
+		}
+		iField := s.Field(i)
 		k = append(k, tField.Tag.Get("json"))
 		k = append(k, iField.Interface())
 	}
