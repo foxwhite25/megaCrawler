@@ -1,4 +1,4 @@
-package dev
+package storage
 
 import (
 	"megaCrawler/crawlers"
@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1419", "越南加", "https://www.vietnamplus.vn")
+	engine := crawlers.Register("1416", "Báo Anh Viat Nam", "https://vietnam.vnanet.vn")
 
-	engine.SetStartingURLs([]string{"https://www.vietnamplus.vn/sitemaps/google-news.xml"})
+	engine.SetStartingURLs([]string{"https://vietnam.vnanet.vn/vietnamese/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -29,11 +29,11 @@ func init() {
 		engine.Visit(element.Text, crawlers.News)
 	})
 
-	engine.OnHTML("div.article__sapo.cms-desc > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Description += element.Text
+	engine.OnHTML(".lr-ct > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
 	})
 
-	engine.OnHTML(".article__body.zce-content-body.cms-body > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".lr-ct > span", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 }
