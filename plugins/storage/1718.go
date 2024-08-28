@@ -1,4 +1,4 @@
-package dev
+package storage
 
 import (
 	"megaCrawler/crawlers"
@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1705", "综合发展研究所", "https://idsicenter.wixsite.com/home/")
+	engine := crawlers.Register("1718", "国家经济发展署", "https://neda.gov.ph/")
 
-	engine.SetStartingURLs([]string{"https://idsicenter.wixsite.com/home/blog-posts-sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://neda.gov.ph/news-2/"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -25,8 +25,8 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Text, crawlers.News)
+	engine.OnHTML(".su-post-title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		engine.Visit(element.Attr("href"), crawlers.News)
 	})
 
 }

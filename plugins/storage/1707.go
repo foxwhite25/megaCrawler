@@ -1,4 +1,4 @@
-package dev
+package storage
 
 import (
 	"megaCrawler/crawlers"
@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1009", "Asia Maritime Transparency Initiative", "https://amti.csis.org/")
+	engine := crawlers.Register("1707", "东亚海洋环境治理伙伴关系", "https://www.pemsea.org/")
 
-	engine.SetStartingURLs([]string{"https://amti.csis.org/sitemap-1.xml"})
+	engine.SetStartingURLs([]string{"https://www.pemsea.org/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -18,19 +18,15 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         false,
+		Text:         true,
 		Title:        true,
 		TextLanguage: "",
 	}
 
 	extractorConfig.Apply(engine)
 
-	// XML
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Text, crawlers.News)
 	})
 
-	engine.OnHTML(".entry-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content += element.Text
-	})
 }

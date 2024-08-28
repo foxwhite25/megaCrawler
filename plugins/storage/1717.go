@@ -1,4 +1,4 @@
-package dev
+package storage
 
 import (
 	"megaCrawler/crawlers"
@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1707", "东亚海洋环境治理伙伴关系", "https://www.pemsea.org/")
+	engine := crawlers.Register("1717", "海外菲律宾人委员会", "https://cfo.gov.ph/")
 
-	engine.SetStartingURLs([]string{"https://www.pemsea.org/sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://cfo.gov.ph/wp-sitemap-posts-post-1.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,

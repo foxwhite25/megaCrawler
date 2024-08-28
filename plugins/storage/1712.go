@@ -1,4 +1,4 @@
-package dev
+package storage
 
 import (
 	"megaCrawler/crawlers"
@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1702", "国际海洋安全研究中心", "https://cimsec.org/")
+	engine := crawlers.Register("1712", "科技部", "https://www.dost.gov.ph/")
 
-	engine.SetStartingURLs([]string{"https://cimsec.org/"})
+	engine.SetStartingURLs([]string{"https://www.dost.gov.ph/"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -25,11 +25,12 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML(".post-thumbnail", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".btn", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
 
-	engine.OnHTML("#content > nav > div > a.next.page-numbers", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".hasTooltip", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
+
 }

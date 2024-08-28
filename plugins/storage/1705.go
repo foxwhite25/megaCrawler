@@ -1,4 +1,4 @@
-package dev
+package storage
 
 import (
 	"megaCrawler/crawlers"
@@ -8,13 +8,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1719", "农业部", "https://www.da.gov.ph/")
+	engine := crawlers.Register("1705", "综合发展研究所", "https://idsicenter.wixsite.com/home/")
 
-	engine.SetStartingURLs([]string{
-		"https://www.da.gov.ph/post-sitemap.xml",
-		"https://www.da.gov.ph/post-sitemap2.xml",
-		"https://www.da.gov.ph/post-sitemap3.xml",
-	})
+	engine.SetStartingURLs([]string{"https://idsicenter.wixsite.com/home/blog-posts-sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
