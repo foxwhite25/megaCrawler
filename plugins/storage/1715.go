@@ -36,5 +36,4 @@ func init() {
 	engine.OnHTML(".Scont-bd > div > a:nth-last-child(2)", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Visit(element.Attr("href"), crawlers.Index)
 	})
-
 }

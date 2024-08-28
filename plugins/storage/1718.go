@@ -28,5 +28,4 @@ func init() {
 	engine.OnHTML(".su-post-title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-
 }

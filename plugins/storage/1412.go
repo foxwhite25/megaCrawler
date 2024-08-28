@@ -1,15 +1,16 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	//NSCB在2013年已并入菲律宾统计局，现采用统计局的官网（GPT）
+	// NSCB在2013年已并入菲律宾统计局，现采用统计局的官网（GPT）
 	engine := crawlers.Register("1412", "菲律宾统计局", "https://psa.gov.ph/")
 
 	engine.SetStartingURLs([]string{"https://psa.gov.ph/press-releases"})
