@@ -29,7 +29,7 @@ func init() {
 
 	// engine.OnResponse(func(response *colly.Response, ctx *crawlers.Context) {
 	//	println(string(response.Body))
-	//})
+	// })
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
 		if strings.HasSuffix(element.Text, ".xml") {
