@@ -25,7 +25,7 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	//访问所有新闻页
+	// 访问所有新闻页
 	engine.OnHTML(".header_submenu-content > ul > li > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})

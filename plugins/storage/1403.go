@@ -46,5 +46,4 @@ func init() {
 		})
 		ctx.Content += content
 	})
-
 }

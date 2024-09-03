@@ -10,7 +10,7 @@ import (
 func init() {
 	engine := crawlers.Register("1414", "越通社", "https://vnanet.vn/")
 
-	engine.SetStartingURLs([]string{ //首页下拉列表中所有新闻页
+	engine.SetStartingURLs([]string{ // 首页下拉列表中所有新闻页
 		"https://vnanet.vn/vi/tin-tuc/chinh-tri-11/",
 		"https://vnanet.vn/vi/tin-tuc/kinh-te-4/",
 		"https://vnanet.vn/vi/tin-tuc/an-ninh-quoc-phong-16/",

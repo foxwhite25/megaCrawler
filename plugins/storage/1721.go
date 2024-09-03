@@ -36,5 +36,4 @@ func init() {
 	engine.OnHTML(".next", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
-
 }

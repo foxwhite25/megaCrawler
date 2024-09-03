@@ -44,5 +44,4 @@ func init() {
 	engine.OnHTML(".pagination > li:nth-child(13) > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
-
 }

@@ -28,5 +28,4 @@ func init() {
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Text, crawlers.News)
 	})
-
 }

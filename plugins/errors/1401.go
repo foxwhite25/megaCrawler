@@ -1,4 +1,4 @@
-package dev
+package errors
 
 import (
 	"megaCrawler/crawlers"
@@ -25,7 +25,7 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	//Error：存在人机验证
+	// Error：存在人机验证
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Text, crawlers.News)
 	})

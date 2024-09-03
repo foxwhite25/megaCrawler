@@ -32,5 +32,4 @@ func init() {
 	engine.OnHTML(".hasTooltip", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
-
 }

@@ -1,9 +1,10 @@
 package errors
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -32,5 +33,4 @@ func init() {
 			engine.Visit(element.Text, crawlers.News)
 		}
 	})
-
 }

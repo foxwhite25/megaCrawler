@@ -40,5 +40,4 @@ func init() {
 	engine.OnHTML("div.plain > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
-
 }
