@@ -384,7 +384,7 @@ func NewEngine(id string, baseURL tld.URL) (we *WebsiteEngine) {
 			htmlHandlers:  []CollyHTMLPair{},
 			xmlHandlers:   []XMLPair{},
 			errorHandler: func(r *colly.Response, err error) {
-				if err.Error() == "Too many requests" {
+				if strings.ToLower(err.Error()) == "too many requests" {
 					time.Sleep(time.Duration(rand.Intn(10)) * time.Second)
 				}
 				RetryRequest(r.Request, err, we)
