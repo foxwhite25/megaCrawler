@@ -58,14 +58,14 @@ func getKafkaComsumerChannel() (newsChannel chan string, reportChannel chan stri
 	conf.Producer.Retry.Max = 10
 	conf.Producer.Retry.BackoffFunc = func(retries, maxRetries int) time.Duration {
 		const maxInt64 = float64(math.MaxInt64 - 512)
-		min := 10 * time.Millisecond
-		max := 1 * time.Minute
+		minTime := 10 * time.Millisecond
+		maxTime := 1 * time.Minute
 
-		minf := float64(min)
+		minf := float64(minTime)
 		durf := minf * math.Pow(2, float64(retries))
 		durf = rand.Float64()*(durf-minf) + minf
 		if durf > maxInt64 {
-			return max
+			return maxTime
 		}
 		return time.Duration(durf)
 	}

@@ -33,7 +33,7 @@ func TestTester(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	crawlers.Threads = 64
+	crawlers.Threads = 16
 
 	targetEnv := os.Getenv("TARGET")
 	targets := strings.Split(targetEnv, ",")
