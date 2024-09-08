@@ -38,7 +38,7 @@ func init() {
 		TextLanguage: "",
 	}
 
-	//该网站存在爬虫速度限制
+	//存在非法xml
 	extractorConfig.Apply(engine)
 
 	engine.OnResponse(func(response *colly.Response, ctx *crawlers.Context) {
