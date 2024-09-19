@@ -278,6 +278,7 @@ func Start() {
 			Sugar.Panicf("Cannot read proxy file: %s", *poolFlag)
 		}
 		rp, err := proxy.RoundRobinProxySwitcher(strings.Split(string(dat), "\n")...)
+		Sugar.Infof("Using Proxy %s", strings.Split(string(dat), "\n"))
 
 		if err == nil {
 			Proxy = rp
@@ -286,6 +287,7 @@ func Start() {
 		}
 	} else {
 		if p := os.Getenv("HTTP_PROXY"); p != "" {
+			Sugar.Infof("Using Proxy %s", p)
 			rp, err := proxy.RoundRobinProxySwitcher(p)
 
 			if err == nil {
