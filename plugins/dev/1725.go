@@ -2,6 +2,7 @@ package dev
 
 import (
 	"github.com/gocolly/colly/v2"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
 )

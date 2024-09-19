@@ -39,5 +39,4 @@ func init() {
 	// 	ctx.Content += element.Text
 	// })
 	// 若采集到空文章，请将上述三行代码取消注释，并将Text的true改为false。
-
 }
