@@ -26,6 +26,20 @@ func TestWebMap(_ *testing.T) {
 	}
 }
 
+func waitTimeout(wg *sync.WaitGroup, timeout time.Duration) bool {
+	c := make(chan struct{})
+	go func() {
+		defer close(c)
+		wg.Wait()
+	}()
+	select {
+	case <-c:
+		return false // completed normally
+	case <-time.After(timeout):
+		return true // timed out
+	}
+}
+
 func TestTester(t *testing.T) {
 	buf, err := os.Create("table.txt")
 	bufMutex := sync.Mutex{}
@@ -37,7 +51,7 @@ func TestTester(t *testing.T) {
 
 	targetEnv := os.Getenv("TARGET")
 	targets := strings.Split(targetEnv, ",")
-	if len(targets) == 1 && targets[0] == "" {
+	if len(targets) == 1 && strings.TrimSpace(targets[0]) == "" {
 		targets = make([]string, len(crawlers.WebMap))
 		i := 0
 		for k := range crawlers.WebMap {
@@ -98,16 +112,13 @@ func TestTester(t *testing.T) {
 			},
 			Sugar: crawlers.Sugar,
 		}
-		c.Test.WG.Add(1)
-
-		go func() {
-			time.Sleep(2 * time.Minute)
+		c.Test.WG.Add(len(c.GetStartingURL()))
+		go crawlers.StartEngine(c, true)
+		if waitTimeout(c.Test.WG, 2*time.Minute) {
 			if !c.Test.Done {
 				c.Test.Complete("timeout", c.ID)
 			}
-		}()
-		go crawlers.StartEngine(c, true)
-		c.Test.WG.Wait()
+		}
 
 		table := tablewriter.NewWriter(buf)
 		table.SetHeader([]string{"Field", "Total", "Passed", "Coverage"})

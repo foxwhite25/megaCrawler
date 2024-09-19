@@ -64,9 +64,23 @@ func (w *WebsiteEngine) Visit(url string, pageType PageType) {
 	w.URLChannel <- urlData{URL: u, PageType: pageType}
 }
 
+func (w *WebsiteEngine) VisitIfContains(url string, match []string, pageType PageType) bool {
+	for _, s := range match {
+		if strings.Contains(url, s) {
+			w.Visit(url, pageType)
+			return true
+		}
+	}
+	return false
+}
+
 func (w *WebsiteEngine) SetStartingURLs(urls []string) *WebsiteEngine {
 	w.Collector.startingURLs = urls
 	return w
+}
+
+func (w *WebsiteEngine) GetStartingURL() []string {
+	return w.Collector.startingURLs
 }
 
 func (w *WebsiteEngine) FromRobotTxt(url string) *WebsiteEngine {
@@ -384,7 +398,7 @@ func NewEngine(id string, baseURL tld.URL) (we *WebsiteEngine) {
 			htmlHandlers:  []CollyHTMLPair{},
 			xmlHandlers:   []XMLPair{},
 			errorHandler: func(r *colly.Response, err error) {
-				if err.Error() == "Too many requests" {
+				if strings.ToLower(err.Error()) == "too many requests" {
 					time.Sleep(time.Duration(rand.Intn(10)) * time.Second)
 				}
 				RetryRequest(r.Request, err, we)
