@@ -51,7 +51,7 @@ func TestTester(t *testing.T) {
 
 	targetEnv := os.Getenv("TARGET")
 	targets := strings.Split(targetEnv, ",")
-	if len(targets) == 1 && targets[0] == "" {
+	if len(targets) == 1 && strings.TrimSpace(targets[0]) == "" {
 		targets = make([]string, len(crawlers.WebMap))
 		i := 0
 		for k := range crawlers.WebMap {
