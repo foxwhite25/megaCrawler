@@ -3,6 +3,7 @@ package dev
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -10,7 +11,7 @@ import (
 func init() {
 	engine := crawlers.Register("1730", "伊朗新闻电视台", "https://www.presstv.ir/")
 
-	engine.SetStartingURLs([]string{"https://www.presstv.ir/Section/13013/"})
+	engine.SetStartingURLs([]string{"https://www.presstv.ir/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -25,16 +26,11 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML(".section-latest-news-link", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Visit(element.Attr("href"), crawlers.News)
-	})
-
-	// engine.OnHTML(".col-md-9", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-	// 	ctx.Content += element.Text
-	// })
-	// 若采集到空文章，请将上述三行代码取消注释，并将Text的true改为false。
-
-	engine.OnHTML(".next > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Visit(element.Attr("href"), crawlers.Index)
+	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
+		if strings.Contains(element.Text, "sitemap") {
+			engine.Visit(element.Text, crawlers.Index)
+			return
+		}
+		engine.Visit(element.Text, crawlers.News)
 	})
 }
