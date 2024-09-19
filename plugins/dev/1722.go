@@ -3,6 +3,7 @@ package dev
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -10,7 +11,7 @@ import (
 func init() {
 	engine := crawlers.Register("1722", "胡佛研究所", "https://www.hoover.org/")
 
-	engine.SetStartingURLs([]string{"https://www.hoover.org/news-press/"})
+	engine.SetStartingURLs([]string{"https://www.hoover.org/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -24,6 +25,16 @@ func init() {
 	}
 
 	extractorConfig.Apply(engine)
+
+	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
+		if strings.Contains(element.Text, "news") {
+			engine.Visit(element.Text, crawlers.News)
+			return
+		}
+		if engine.VisitIfContains(element.Text, []string{"research", "publications", "commentary", "press-releases"}, crawlers.Report) {
+			return
+		}
+	})
 
 	engine.OnHTML(".col-three > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)

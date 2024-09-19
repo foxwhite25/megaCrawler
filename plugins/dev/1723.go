@@ -18,7 +18,7 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -29,9 +29,9 @@ func init() {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
 
-	// engine.OnHTML(".container_campx13", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-	// 	ctx.Content += element.Text
-	// })
+	engine.OnHTML(".container_campx13", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
+	})
 	// 若采集到空文章，请将上述三行代码取消注释，并将Text的true改为false。
 
 	engine.OnHTML(".transition_t1sd58hl", func(element *colly.HTMLElement, ctx *crawlers.Context) {

@@ -64,9 +64,23 @@ func (w *WebsiteEngine) Visit(url string, pageType PageType) {
 	w.URLChannel <- urlData{URL: u, PageType: pageType}
 }
 
+func (w *WebsiteEngine) VisitIfContains(url string, match []string, pageType PageType) bool {
+	for _, s := range match {
+		if strings.Contains(url, s) {
+			w.Visit(url, pageType)
+			return true
+		}
+	}
+	return false
+}
+
 func (w *WebsiteEngine) SetStartingURLs(urls []string) *WebsiteEngine {
 	w.Collector.startingURLs = urls
 	return w
+}
+
+func (w *WebsiteEngine) GetStartingURL() []string {
+	return w.Collector.startingURLs
 }
 
 func (w *WebsiteEngine) FromRobotTxt(url string) *WebsiteEngine {
