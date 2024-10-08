@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1437", "Think China", "https://www.thinkchina.sg/")
+	engine := crawlers.Register("1436", "Think China", "https://www.thinkchina.sg/")
 
 	engine.SetStartingURLs([]string{"https://www.thinkchina.sg/_plat/api/sitemap"})
 
