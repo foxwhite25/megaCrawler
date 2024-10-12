@@ -6,12 +6,15 @@ import (
 	"github.com/gocolly/colly/v2"
 )
 
-type HTMLCallback func(element *colly.HTMLElement, ctx *Context)
-type XMLCallback func(element *colly.XMLElement, ctx *Context)
-type CollyHTMLPair struct {
-	callback colly.HTMLCallback
-	selector string
-}
+type (
+	HTMLCallback  func(element *colly.HTMLElement, ctx *Context)
+	XMLCallback   func(element *colly.XMLElement, ctx *Context)
+	CollyHTMLPair struct {
+		callback colly.HTMLCallback
+		selector string
+	}
+)
+
 type XMLPair struct {
 	callback XMLCallback
 	selector string
@@ -21,6 +24,7 @@ type CollectorConstructor struct {
 	domainGlob       string
 	timeout          time.Duration
 	startingURLs     []string
+	startHandler     func()
 	robotTxt         string
 	htmlHandlers     []CollyHTMLPair
 	xmlHandlers      []XMLPair

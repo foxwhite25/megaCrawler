@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"io"
 	"math/rand"
+	"megaCrawler/crawlers/commands"
+	"megaCrawler/crawlers/config"
+	"megaCrawler/crawlers/tester"
 	"net/http"
 	"net/url"
 	"strings"
@@ -11,10 +14,6 @@ import (
 
 	"github.com/eapache/go-resiliency/semaphore"
 	"github.com/sourcegraph/conc"
-
-	"megaCrawler/crawlers/commands"
-	"megaCrawler/crawlers/config"
-	"megaCrawler/crawlers/tester"
 
 	"github.com/go-co-op/gocron"
 	"github.com/gocolly/colly/v2"
@@ -95,6 +94,11 @@ func (w *WebsiteEngine) SetTimeout(timeout time.Duration) *WebsiteEngine {
 
 func (w *WebsiteEngine) SetDomain(domain string) *WebsiteEngine {
 	w.Collector.domainGlob = domain
+	return w
+}
+
+func (w *WebsiteEngine) OnEngineStart(callback func()) *WebsiteEngine {
+	w.Collector.startHandler = callback
 	return w
 }
 
@@ -280,6 +284,8 @@ func (w *WebsiteEngine) processURL() (err error) {
 		w.Visit(startingURL, Index)
 	}
 
+	w.Collector.startHandler()
+
 	if w.Collector.launchHandler != nil {
 		w.Runner.Go(func() {
 			w.Collector.launchHandler()
@@ -397,6 +403,7 @@ func NewEngine(id string, baseURL tld.URL) (we *WebsiteEngine) {
 			timeout:       10 * time.Second,
 			htmlHandlers:  []CollyHTMLPair{},
 			xmlHandlers:   []XMLPair{},
+			startHandler:  func() {},
 			errorHandler: func(r *colly.Response, err error) {
 				if strings.ToLower(err.Error()) == "too many requests" {
 					time.Sleep(time.Duration(rand.Intn(10)) * time.Second)
