@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1033", "人权观察", "https://www.hrw.org/zh-hans")
+	engine := crawlers.Register("1033", "人权观察", "https://www.hrw.org/")
 
 	engine.SetStartingURLs([]string{"https://www.hrw.org/zh-hans/news"})
 
