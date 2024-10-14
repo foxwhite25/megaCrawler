@@ -18,30 +18,18 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         false,
+		Text:         true,
 		Title:        true,
 		TextLanguage: "",
 	}
 
 	extractorConfig.Apply(engine)
-	// engine.OnResponse((func(response *colly.Response, ctx *crawlers.Context) {
-	// 	crawlers.Sugar.Debugln(response.StatusCode)
-	// 	crawlers.Sugar.Debugln(string(response.Body))
-	// }))
-	// engine.OnHTML(".label > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-	// 	engine.Visit(element.Attr("href"), crawlers.Index)
-	// })
-	// engine.OnHTML(".just-in-footer > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-	// 	engine.Visit(element.Attr("href"), crawlers.Index)
-	// })
-	engine.OnHTML(".gb-headline > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+
+	engine.OnHTML(".entry-title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
+
 	engine.OnHTML(".dynamic-entry-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
-
-	//engine.OnHTML(".pager__item > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-	//	engine.Visit(element.Attr("href"), crawlers.Index)
-	//})
 }
