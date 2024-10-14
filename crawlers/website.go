@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"io"
 	"math/rand"
-	"megaCrawler/crawlers/commands"
-	"megaCrawler/crawlers/config"
-	"megaCrawler/crawlers/tester"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
+
+	"megaCrawler/crawlers/commands"
+	"megaCrawler/crawlers/config"
+	"megaCrawler/crawlers/tester"
 
 	"github.com/eapache/go-resiliency/semaphore"
 	"github.com/sourcegraph/conc"
@@ -191,13 +192,13 @@ func RetryRequest(r *colly.Request, err error, w *WebsiteEngine) {
 		return
 	}
 	go func() {
-		left := retryRequest(r, 10)
+		left, waitTime := retryRequest(r, 10)
 
 		if left == 0 {
 			_ = w.bar.Add(1)
 			Sugar.Errorf("Max retries exceed for %s: %s", r.URL.String(), err.Error())
 		} else {
-			Sugar.Debugf("Website error tries %d for %s: %s", left, r.URL.String(), err.Error())
+			Sugar.Debugf("Website error tries %d for %s: %s, will wait for another %dms", left, r.URL.String(), err.Error(), waitTime)
 		}
 	}()
 }

@@ -1,6 +1,8 @@
 package crawlers
 
 import (
+	"math"
+	"math/rand"
 	"time"
 
 	"github.com/gocolly/colly/v2"
@@ -33,14 +35,26 @@ type CollectorConstructor struct {
 	launchHandler    func()
 }
 
-func retryRequest(r *colly.Request, maxRetries int) int {
+func randRange(min, max int) int {
+	return rand.Intn(max-min) + min
+}
+
+func retryRequest(r *colly.Request, maxRetries int) (int, int) {
 	retriesLeft := maxRetries
 	if x, ok := r.Ctx.GetAny("retriesLeft").(int); ok {
 		retriesLeft = x
 	}
+
 	if retriesLeft > 0 {
+		// Exponential backoff
+		millSecRetry := int(math.Pow(2, float64(maxRetries-retriesLeft+1)) * 1000)
+		jitter := randRange(-500, 1500) * randRange(1, millSecRetry/1000)
+		delay := time.Duration(millSecRetry+jitter) * time.Millisecond
+		time.Sleep(delay)
+
 		r.Ctx.Put("retriesLeft", retriesLeft-1)
 		_ = r.Retry()
+		return retriesLeft, millSecRetry + jitter
 	}
-	return retriesLeft
+	return retriesLeft, -1
 }
