@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1401", "罗纳德·里根总统基金会和研究所", "https://www.reaganfoundation.org/")
+	engine := crawlers.Register("1041", "罗纳德·里根总统基金会和研究所", "https://www.reaganfoundation.org/")
 
-	engine.SetStartingURLs([]string{"https://www.reaganfoundation.org/about-us/press-releases/"})
+	engine.SetStartingURLs([]string{"https://www.reaganfoundation.org/site-map-xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -25,15 +25,11 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML(".text > h1 > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.News)
+	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
+		engine.Visit(element.Text, crawlers.News)
 	})
 
 	engine.OnHTML(".page-content-box", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content += element.Text
-	})
-
-	engine.OnHTML(".pagination > li:nth-last-child(1) > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.Index)
+		ctx.Content = element.Text
 	})
 }
