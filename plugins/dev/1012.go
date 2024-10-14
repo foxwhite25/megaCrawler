@@ -18,7 +18,7 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         false,
+		Text:         true,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -28,6 +28,9 @@ func init() {
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
 		if strings.Contains(element.Text, "post-sitemap") {
 			engine.Visit(element.Text, crawlers.Index)
+			return
+		}
+		if strings.Contains(element.Text, "sitemap") {
 			return
 		}
 		engine.Visit(element.Text, crawlers.News)
