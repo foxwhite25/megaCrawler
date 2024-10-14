@@ -36,8 +36,8 @@ type CollectorConstructor struct {
 	disableCookie    bool
 }
 
-func randRange(min, max int) int {
-	return rand.Intn(max-min) + min
+func randRange(minVal, maxVal int) int {
+	return rand.Intn(maxVal-minVal) + minVal
 }
 
 func retryRequest(r *colly.Request, maxRetries int) (int, int) {
