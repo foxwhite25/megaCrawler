@@ -45,6 +45,18 @@ func Register(service string, name string, baseURL string) *WebsiteEngine {
 
 func StartAll() {
 	for service, engine := range WebMap {
+		if len(Website) != 0 {
+			found := false
+			for _, site := range Website {
+				if site == service {
+					found = true
+					break
+				}
+			}
+			if !found {
+				continue
+			}
+		}
 		serviceHash := hash(service)
 		engine := engine
 		if serviceHash%uint32(Shard.Total) == uint32(Shard.Number) {
