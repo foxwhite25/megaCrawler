@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -11,7 +12,7 @@ import (
 func init() {
 	engine := crawlers.Register("1426", "海峡时报", "https://www.straitstimes.com/global")
 
-	engine.SetStartingURLs([]string{ //各个新闻板块网站
+	engine.SetStartingURLs([]string{ // 各个新闻板块网站
 		"https://www.straitstimes.com/singapore",
 		"https://www.straitstimes.com/asia",
 		"https://www.straitstimes.com/world",
@@ -37,7 +38,7 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	//进入各个新闻板块的不同新闻页
+	// 进入各个新闻板块的不同新闻页
 	engine.OnHTML(".view-footer > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
@@ -46,7 +47,7 @@ func init() {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
 
-	//处理分页
+	// 处理分页
 	engine.OnHTML(".js-pager__items.pagination > li > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		href := element.Attr("href")
 		if strings.Contains(href, "?page=") {
@@ -55,7 +56,7 @@ func init() {
 		}
 	})
 
-	//获取作者信息
+	// 获取作者信息
 	engine.OnHTML(".group-info > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Authors = append(ctx.Authors, strings.TrimSpace(element.Text))
 	})

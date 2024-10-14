@@ -2,11 +2,13 @@ package storage
 
 import (
 	"bytes"
-	"github.com/gocolly/colly/v2"
-	"megaCrawler/crawlers"
-	"megaCrawler/extractors"
 	"strings"
 	"unicode"
+
+	"github.com/gocolly/colly/v2"
+
+	"megaCrawler/crawlers"
+	"megaCrawler/extractors"
 )
 
 func removeControlChars(b []byte) []byte {
@@ -20,7 +22,6 @@ func removeControlChars(b []byte) []byte {
 }
 
 func init() {
-
 	engine := crawlers.Register("1425", "The Nation (Thailand)", "https://www.nationthailand.com/")
 
 	engine.SetStartingURLs([]string{
@@ -38,7 +39,7 @@ func init() {
 		TextLanguage: "",
 	}
 
-	//存在非法xml
+	// 存在非法xml
 	extractorConfig.Apply(engine)
 
 	engine.OnResponse(func(response *colly.Response, ctx *crawlers.Context) {

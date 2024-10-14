@@ -1,10 +1,11 @@
 package errors
 
 import (
-	"megaCrawler/crawlers"
-	"megaCrawler/extractors"
 	"strings"
 	"time"
+
+	"megaCrawler/crawlers"
+	"megaCrawler/extractors"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -12,10 +13,10 @@ import (
 func init() {
 	engine := crawlers.Register("1427", "BERNAMA", "https://www.bernama.com/en//")
 
-	//这个网站（没有sitemap）的新闻存放相对有些混乱，但通过下面这个搜索界面能找到大约4000多篇新闻
+	// 这个网站（没有sitemap）的新闻存放相对有些混乱，但通过下面这个搜索界面能找到大约4000多篇新闻
 	engine.SetStartingURLs([]string{"https://www.bernama.com/en/search.php?cat1=all&terms=%20&page=1"})
 
-	engine.SetTimeout(15 * time.Second) //增加等待服务器回应的时长
+	engine.SetTimeout(15 * time.Second) // 增加等待服务器回应的时长
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -34,7 +35,7 @@ func init() {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
 
-	//处理分页
+	// 处理分页
 	engine.OnHTML(".text-center > ul > li > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		href := element.Attr("href")
 		if strings.Contains(href, "?page=") {

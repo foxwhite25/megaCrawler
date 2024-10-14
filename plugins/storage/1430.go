@@ -2,9 +2,10 @@ package storage
 
 import (
 	"fmt"
+	"regexp"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"regexp"
 
 	"github.com/gocolly/colly/v2"
 )

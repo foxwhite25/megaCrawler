@@ -3,12 +3,14 @@ package dev
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
 	"io"
-	"megaCrawler/crawlers"
-	"megaCrawler/extractors"
 	"net/http"
 	"strings"
+
+	"github.com/PuerkitoBio/goquery"
+
+	"megaCrawler/crawlers"
+	"megaCrawler/extractors"
 
 	"github.com/gocolly/colly/v2"
 )

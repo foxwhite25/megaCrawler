@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -34,7 +35,7 @@ func init() {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
 
-	//获取作者信息
+	// 获取作者信息
 	engine.OnHTML("span.author.vcard > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Authors = append(ctx.Authors, strings.TrimSpace(element.Text))
 	})

@@ -35,5 +35,4 @@ func init() {
 	engine.OnHTML(".site-main > article > div.entry-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
-
 }

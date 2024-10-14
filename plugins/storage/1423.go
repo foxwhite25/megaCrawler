@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"time"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"time"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -28,7 +29,7 @@ func init() {
 
 	engine.OnHTML(".entry-body > header > h3 > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
-		time.Sleep(300 * time.Millisecond) //每次访问延迟300ms
+		time.Sleep(300 * time.Millisecond) // 每次访问延迟300ms
 	})
 
 	engine.OnHTML(".g1-pagination-item > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {

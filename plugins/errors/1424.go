@@ -25,7 +25,7 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	//Error：需要登录
+	// Error：需要登录
 
 	engine.OnHTML(".col-xs-7.left.col-sm-12 > h2 > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)

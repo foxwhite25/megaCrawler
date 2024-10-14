@@ -29,7 +29,7 @@ func init() {
 		engine.Visit(element.Text, crawlers.News)
 	})
 
-	//采集网站的副标题（如果它有的话）
+	// 采集网站的副标题（如果它有的话）
 	engine.OnHTML(".article-headline > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.SubTitle += element.Text
 	})
