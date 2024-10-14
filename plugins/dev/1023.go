@@ -8,9 +8,12 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1023", "布鲁克林中心", "https://www.ci.brooklyn-center.mn.us/")
+	engine := crawlers.Register("1023", "布鲁克林中心", "https://www.brooklyncentermn.gov/")
 
-	engine.SetStartingURLs([]string{"https://www.ci.brooklyn-center.mn.us/"})
+	engine.SetStartingURLs([]string{
+		"https://www.brooklyncentermn.gov/our-city/advanced-components/list-detail-pages/news-list/",
+		"https://www.brooklyncentermn.gov/our-city/advanced-components/list-detail-pages/news-list/-arch-1",
+	})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -24,24 +27,16 @@ func init() {
 	}
 
 	extractorConfig.Apply(engine)
-	// engine.OnResponse((func(response *colly.Response, ctx *crawlers.Context) {
-	// 	crawlers.Sugar.Debugln(response.StatusCode)
-	// 	crawlers.Sugar.Debugln(string(response.Body))
-	// }))
-	engine.OnHTML(".slick_content  > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+
+	engine.OnHTML(".list-pager > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
-	})
-	engine.OnHTML(".list-filter > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.Index)
-	})
-	engine.OnHTML(".item-title", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.News)
-	})
-	engine.OnHTML(".detail-contentt > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content += element.Text
 	})
 
-	engine.OnHTML(".pg-normal pg-button pg-next-button", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.Index)
+	engine.OnHTML("a.item-title", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		engine.Visit(element.Attr("href"), crawlers.News)
+	})
+
+	engine.OnHTML(".detail-contentt > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
 	})
 }
