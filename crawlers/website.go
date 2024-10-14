@@ -74,6 +74,11 @@ func (w *WebsiteEngine) VisitIfContains(url string, match []string, pageType Pag
 	return false
 }
 
+func (w *WebsiteEngine) DisableCookie() *WebsiteEngine {
+	w.Collector.disableCookie = true
+	return w
+}
+
 func (w *WebsiteEngine) SetStartingURLs(urls []string) *WebsiteEngine {
 	w.Collector.startingURLs = urls
 	return w
@@ -149,6 +154,10 @@ func (w *WebsiteEngine) getCollector() (c *colly.Collector, ok error) {
 	})
 
 	w.Runner = conc.NewWaitGroup()
+
+	if w.Collector.disableCookie {
+		c.DisableCookies()
+	}
 
 	c.SetRequestTimeout(cc.timeout)
 	if err != nil {

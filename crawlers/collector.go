@@ -33,6 +33,7 @@ type CollectorConstructor struct {
 	responseHandlers []func(response *colly.Response, ctx *Context)
 	errorHandler     colly.ErrorCallback
 	launchHandler    func()
+	disableCookie    bool
 }
 
 func randRange(min, max int) int {
