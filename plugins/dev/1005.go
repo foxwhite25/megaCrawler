@@ -1,16 +1,15 @@
 package dev
 
 import (
+	"github.com/gocolly/colly/v2"
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-
-	"github.com/gocolly/colly/v2"
 )
 
 func init() {
 	engine := crawlers.Register("1005", "PALAWAN NEWS", "https://palawan-news.com/")
 
-	engine.SetStartingURLs([]string{"https://palawan-news.com/"})
+	engine.SetStartingURLs([]string{"https://palawan-news.com/news-sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -24,17 +23,12 @@ func init() {
 	}
 
 	extractorConfig.Apply(engine)
-	engine.OnHTML(".menu-item > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.Index)
-	})
-	engine.OnHTML(".td-module-thumb > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.News)
-	})
-	engine.OnHTML(".td-ss-main-content > div > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content += element.Text
+
+	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
+		engine.Visit(element.Text, crawlers.News)
 	})
 
-	engine.OnHTML(".page-nav > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.Index)
+	engine.OnHTML(".td-ss-main-content > div > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
 	})
 }
