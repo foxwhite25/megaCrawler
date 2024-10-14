@@ -172,7 +172,7 @@ func init() {
 		}
 		defer res.Body.Close()
 
-		if res.StatusCode != 200 {
+		if res.StatusCode != http.StatusOK {
 			crawlers.Sugar.Errorf("1748 structure api status code error: %d %s", res.StatusCode, res.Status)
 			return
 		}
