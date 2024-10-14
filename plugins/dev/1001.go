@@ -10,7 +10,7 @@ import (
 func init() {
 	engine := crawlers.Register("1001", "Carnegie_europe", "https://carnegieeurope.eu/")
 
-	engine.SetStartingURLs([]string{"https://carnegieeurope.eu/"})
+	engine.SetStartingURLs([]string{"https://carnegieendowment.org/__sitemap__/research.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -25,21 +25,12 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	// engine.OnResponse((func(response *colly.Response, ctx *crawlers.Context) {
-	// 	crawlers.Sugar.Debugln(response.StatusCode)
-	// 	crawlers.Sugar.Debugln(string(response.Body))
-	// }))
-	engine.OnHTML(".more-link > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.Index)
+	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
+		engine.Visit(element.Text, crawlers.Report)
 	})
-	engine.OnHTML(".summary-wrapper > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.News)
-	})
-	engine.OnHTML(".person > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.Expert)
-	})
-	engine.OnHTML(".block > div > div > div > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content += element.Text
+
+	engine.OnHTML(".body", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content = crawlers.StandardizeSpaces(element.Text)
 	})
 }
 
