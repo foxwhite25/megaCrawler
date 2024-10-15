@@ -36,7 +36,7 @@ func init() {
 
 	// engine.OnHTML(".gutters", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 	//	ctx.Content = crawlers.StandardizeSpaces(element.Text)
-	//})
+	// })
 
 	engine.OnHTML(".next > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)

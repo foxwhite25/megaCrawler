@@ -38,5 +38,5 @@ func init() {
 	})
 	// engine.OnHTML(".pager__item > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 	//	engine.Visit(element.Attr("href"), crawlers.Index)
-	//})
+	// })
 }
