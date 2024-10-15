@@ -9,12 +9,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/eapache/go-resiliency/semaphore"
-	"github.com/sourcegraph/conc"
-
 	"megaCrawler/crawlers/commands"
 	"megaCrawler/crawlers/config"
 	"megaCrawler/crawlers/tester"
+
+	"github.com/eapache/go-resiliency/semaphore"
+	"github.com/sourcegraph/conc"
 
 	"github.com/go-co-op/gocron"
 	"github.com/gocolly/colly/v2"
@@ -74,6 +74,11 @@ func (w *WebsiteEngine) VisitIfContains(url string, match []string, pageType Pag
 	return false
 }
 
+func (w *WebsiteEngine) DisableCookie() *WebsiteEngine {
+	w.Collector.disableCookie = true
+	return w
+}
+
 func (w *WebsiteEngine) SetStartingURLs(urls []string) *WebsiteEngine {
 	w.Collector.startingURLs = urls
 	return w
@@ -95,6 +100,11 @@ func (w *WebsiteEngine) SetTimeout(timeout time.Duration) *WebsiteEngine {
 
 func (w *WebsiteEngine) SetDomain(domain string) *WebsiteEngine {
 	w.Collector.domainGlob = domain
+	return w
+}
+
+func (w *WebsiteEngine) OnEngineStart(callback func()) *WebsiteEngine {
+	w.Collector.startHandler = callback
 	return w
 }
 
@@ -145,6 +155,10 @@ func (w *WebsiteEngine) getCollector() (c *colly.Collector, ok error) {
 
 	w.Runner = conc.NewWaitGroup()
 
+	if w.Collector.disableCookie {
+		c.DisableCookies()
+	}
+
 	c.SetRequestTimeout(cc.timeout)
 	if err != nil {
 		return nil, err
@@ -187,13 +201,13 @@ func RetryRequest(r *colly.Request, err error, w *WebsiteEngine) {
 		return
 	}
 	go func() {
-		left := retryRequest(r, 10)
+		left, waitTime := retryRequest(r, 10)
 
 		if left == 0 {
 			_ = w.bar.Add(1)
 			Sugar.Errorf("Max retries exceed for %s: %s", r.URL.String(), err.Error())
 		} else {
-			Sugar.Debugf("Website error tries %d for %s: %s", left, r.URL.String(), err.Error())
+			Sugar.Debugf("Website error tries %d for %s: %s, will wait for another %dms", left, r.URL.String(), err.Error(), waitTime)
 		}
 	}()
 }
@@ -279,6 +293,8 @@ func (w *WebsiteEngine) processURL() (err error) {
 	for _, startingURL := range w.Collector.startingURLs {
 		w.Visit(startingURL, Index)
 	}
+
+	w.Collector.startHandler()
 
 	if w.Collector.launchHandler != nil {
 		w.Runner.Go(func() {
@@ -397,6 +413,7 @@ func NewEngine(id string, baseURL tld.URL) (we *WebsiteEngine) {
 			timeout:       10 * time.Second,
 			htmlHandlers:  []CollyHTMLPair{},
 			xmlHandlers:   []XMLPair{},
+			startHandler:  func() {},
 			errorHandler: func(r *colly.Response, err error) {
 				if strings.ToLower(err.Error()) == "too many requests" {
 					time.Sleep(time.Duration(rand.Intn(10)) * time.Second)
