@@ -37,6 +37,7 @@ var Shard struct {
 	Total  int
 	Number int
 }
+var Website []string
 
 // Manager Program structures.
 // Define Start and Stop methods.
@@ -93,6 +94,7 @@ func Start() {
 	shardFlag := flag.Int("shard", 0, "The shard number")
 	elasticFlag := flag.Bool("elastic", false, "If choice to use elasticsearch directly")
 	poolFlag := flag.String("proxy_pool", "", "Specify a proxy pool file path")
+	websiteFlag := flag.String("website", "", "Filter website to run, seperated using `,`")
 
 	flag.Parse()
 
@@ -252,6 +254,10 @@ func Start() {
 	if *startFlag != "" {
 		commands.Start(*startFlag)
 		return
+	}
+
+	if *websiteFlag != "" {
+		Website = strings.Split(*websiteFlag, ",")
 	}
 
 	svcConfig := &service.Config{
