@@ -2,6 +2,7 @@ package errors
 
 import (
 	"github.com/gocolly/colly/v2"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
 )
@@ -33,7 +34,7 @@ func init() {
 		engine.Visit(element.Text, crawlers.News)
 	})
 
-	//engine.OnHTML(".gutters", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	// engine.OnHTML(".gutters", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 	//	ctx.Content = crawlers.StandardizeSpaces(element.Text)
 	//})
 
