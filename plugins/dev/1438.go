@@ -2,6 +2,7 @@ package dev
 
 import (
 	"fmt"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
 
@@ -16,7 +17,7 @@ func init() {
 
 	// 动态生成所有页面的 URL
 	var urls []string
-	for page := 1; page <= totalPages; page++ { //这个网站翻页索引有些不同，导致原本的索引会无效，所以尝试访问所有页面网站。
+	for page := 1; page <= totalPages; page++ { // 这个网站翻页索引有些不同，导致原本的索引会无效，所以尝试访问所有页面网站。
 		url := fmt.Sprintf("%s?p=%d", baseURL, page)
 		urls = append(urls, url)
 	}

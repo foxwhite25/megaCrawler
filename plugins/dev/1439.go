@@ -44,5 +44,4 @@ func init() {
 	engine.OnHTML(`.ii04i59q > div[dir="auto"]`, func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
-
 }
