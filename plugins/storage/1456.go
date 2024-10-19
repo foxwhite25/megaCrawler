@@ -1,4 +1,4 @@
-package dev
+package storage
 
 import (
 	"megaCrawler/crawlers"
@@ -9,14 +9,16 @@ import (
 )
 
 func init() {
-	//这个部门隶属农林水产省
-	engine := crawlers.Register("1457", "水产厅(Japan)", "http://www.jfa.maff.go.jp/")
+	//日本的这几个网站非常相似，后面的部分部门隶属这个农林水产省
+	engine := crawlers.Register("1456", "农林水产省", "http://www.maff.go.jp/")
 
-	engine.SetStartingURLs([]string{"https://www.jfa.maff.go.jp/j/press/index.html"})
+	engine.SetStartingURLs([]string{
+		"https://www.maff.go.jp/j/press/arc/index.html",
+	})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        true,
+		Image:        false,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
@@ -27,16 +29,21 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
+	engine.OnHTML(".mgbk > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		engine.Visit(element.Attr("href"), crawlers.Index)
+	})
+
 	engine.OnHTML(".list_item > dd > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		url, err := element.Request.URL.Parse(element.Attr("href"))
 		if err != nil {
 			crawlers.Sugar.Error(err.Error())
 			return
 		}
-		engine.Visit(url.String(), crawlers.Index)
+		engine.Visit(url.String(), crawlers.News)
 	})
 
-	engine.OnHTML(".content > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	//采集PDF
+	engine.OnHTML(".content > p > a, .content > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		fileURL := element.Attr("href")
 		if strings.Contains(fileURL, ".pdf") {
 			url, err := element.Request.URL.Parse(element.Attr("href"))
@@ -49,7 +56,7 @@ func init() {
 		}
 	})
 
-	engine.OnHTML(".content > p:not([class]),.content > h2,.content > font > font", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".content > p:not([class]),.content > h2", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 }

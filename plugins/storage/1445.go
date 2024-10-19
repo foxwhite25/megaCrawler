@@ -1,4 +1,4 @@
-package dev
+package storage
 
 import (
 	"megaCrawler/crawlers"
