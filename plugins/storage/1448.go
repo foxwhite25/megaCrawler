@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -26,7 +27,7 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	//配置文件中定义Crawl-delay: 10，但它似乎并未实施拦截
+	// 配置文件中定义Crawl-delay: 10，但它似乎并未实施拦截
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
 		if strings.Contains(element.Text, "/sitemap_articles") {
 			engine.Visit(element.Text, crawlers.Index)

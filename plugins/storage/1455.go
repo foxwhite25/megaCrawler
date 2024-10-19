@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -34,7 +35,7 @@ func init() {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
 
-	//采集PDF
+	// 采集PDF
 	engine.OnHTML(`a[data-icon="pdf"]`, func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		fileURL := element.Attr("href")
 		if strings.Contains(fileURL, ".pdf") {
@@ -51,5 +52,4 @@ func init() {
 	engine.OnHTML("div.m-grid__col1", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
-
 }

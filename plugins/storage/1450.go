@@ -1,15 +1,16 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	//这网站的主域名为www.thenews.com.pk，它只提供当日的新闻，所以采取采集内部的一个专门提供新闻的模块
+	// 这网站的主域名为www.thenews.com.pk，它只提供当日的新闻，所以采取采集内部的一个专门提供新闻的模块
 	engine := crawlers.Register("1450", "国际新闻", "https://www.thenews.com.pk/tns/")
 
 	engine.SetStartingURLs([]string{
@@ -60,5 +61,4 @@ func init() {
 	engine.OnHTML(".detail-desc > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
-
 }

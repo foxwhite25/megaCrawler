@@ -42,7 +42,7 @@ func init() {
 		ctx.SubTitle += element.Text
 	})
 
-	//两种不同风格的article网页
+	// 两种不同风格的article网页
 	engine.OnHTML(".article-inner-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})

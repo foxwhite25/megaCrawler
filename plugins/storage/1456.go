@@ -1,15 +1,16 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	//日本的这几个网站非常相似，后面的部分部门隶属这个农林水产省
+	// 日本的这几个网站非常相似，后面的部分部门隶属这个农林水产省
 	engine := crawlers.Register("1456", "农林水产省", "http://www.maff.go.jp/")
 
 	engine.SetStartingURLs([]string{
@@ -42,7 +43,7 @@ func init() {
 		engine.Visit(url.String(), crawlers.News)
 	})
 
-	//采集PDF
+	// 采集PDF
 	engine.OnHTML(".content > p > a, .content > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		fileURL := element.Attr("href")
 		if strings.Contains(fileURL, ".pdf") {

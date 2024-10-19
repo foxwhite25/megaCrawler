@@ -1,19 +1,20 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	//国土交通省下属的外局
+	// 国土交通省下属的外局
 	engine := crawlers.Register("1459", "观光厅", "https://www.mlit.go.jp/kankocho/")
 
 	engine.SetStartingURLs([]string{
-		//这个网站存留了2021-2024年的内容，2020年以前的内容被留在了旧网站中
+		// 这个网站存留了2021-2024年的内容，2020年以前的内容被留在了旧网站中
 		"https://www.mlit.go.jp/kankocho/news_2024.html",
 		"https://www.mlit.go.jp/kankocho/news_2023.html",
 		"https://www.mlit.go.jp/kankocho/news_2022.html",
@@ -41,12 +42,12 @@ func init() {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
 
-	//获取时间
+	// 获取时间
 	engine.OnHTML(".st-article__cont > p.update", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.PublicationTime = strings.TrimSpace(element.Text)
 	})
 
-	//采集PDF
+	// 采集PDF
 	engine.OnHTML(".st-article__elm > ul.c-list > li > a, .st-article__head > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		fileURL := element.Attr("href")
 		if strings.Contains(fileURL, ".pdf") {
@@ -63,5 +64,4 @@ func init() {
 	engine.OnHTML("div.st-article__cont > div.st-article__cont", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
-
 }

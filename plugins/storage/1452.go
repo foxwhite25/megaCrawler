@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -43,9 +44,8 @@ func init() {
 	})
 
 	engine.OnHTML(".body-copy.lh-loose.article-page > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		if element.Text != "View The Five Stocks Here " { //清理冗余文本
+		if element.Text != "View The Five Stocks Here " { // 清理冗余文本
 			ctx.Content += element.Text
 		}
 	})
-
 }

@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -12,7 +13,7 @@ func init() {
 	engine := crawlers.Register("1458", "国土交通省", "http://www.mlit.go.jp/")
 
 	engine.SetStartingURLs([]string{
-		"https://www.mlit.go.jp/report/press/houdou202401.html", //索引包含对应年份的所有报道
+		"https://www.mlit.go.jp/report/press/houdou202401.html", // 索引包含对应年份的所有报道
 		"https://www.mlit.go.jp/report/press/houdou202312.html",
 		"https://www.mlit.go.jp/report/press/houdou202212.html",
 		"https://www.mlit.go.jp/report/press/houdou202112.html",
@@ -54,12 +55,12 @@ func init() {
 		ctx.Title = strings.TrimSpace(element.Text)
 	})
 
-	//获取时间
+	// 获取时间
 	engine.OnHTML(".clearfix > p.date.mb20", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.PublicationTime = strings.TrimSpace(element.Text)
 	})
 
-	//采集PDF
+	// 采集PDF
 	engine.OnHTML(".section > p > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		fileURL := element.Attr("href")
 		if strings.Contains(fileURL, ".pdf") {

@@ -34,7 +34,7 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	//补全URL
+	// 补全URL
 	engine.OnHTML("a.bt-2020", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		url, err := element.Request.URL.Parse(element.Attr("href"))
 		if err != nil {
@@ -54,10 +54,9 @@ func init() {
 			engine.Visit(url.String(), crawlers.Index)
 		})
 
-	//匹配多种content样式
+	// 匹配多种content样式
 	engine.OnHTML(".TRS_Editor > p, .TRS_Editor > div > p, .TRS_Editor > div > div > span, .TRS_Editor > div > div > p, .TRS_Editor > div > div > div > p",
 		func(element *colly.HTMLElement, ctx *crawlers.Context) {
 			ctx.Content += element.Text
 		})
-
 }

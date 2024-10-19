@@ -1,15 +1,16 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	//这个部门隶属农林水产省
+	// 这个部门隶属农林水产省
 	engine := crawlers.Register("1457", "水产厅(Japan)", "http://www.jfa.maff.go.jp/")
 
 	engine.SetStartingURLs([]string{"https://www.jfa.maff.go.jp/j/press/index.html"})
