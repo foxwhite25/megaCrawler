@@ -1,4 +1,4 @@
-package dev
+package storage
 
 import (
 	"megaCrawler/crawlers"
@@ -9,9 +9,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1067", "euromoney.com", "https://www.euromoney.com/")
+	engine := crawlers.Register("1063", "Kashmir Observer", "https://www.kashmirobserver.net/")
 
-	engine.SetStartingURLs([]string{"https://www.euromoney.com/sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://kashmirobserver.net/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -25,12 +25,12 @@ func init() {
 	}
 
 	extractorConfig.Apply(engine)
+
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		switch {
-		case strings.Contains(element.Text, "sitemap"):
+		if strings.Contains(element.Text, "post-sitemap") {
 			engine.Visit(element.Text, crawlers.Index)
-		default:
-			engine.Visit(element.Text, crawlers.News)
+			return
 		}
+		engine.Visit(element.Text, crawlers.News)
 	})
 }

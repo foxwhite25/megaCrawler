@@ -1,4 +1,4 @@
-package dev
+package storage
 
 import (
 	"megaCrawler/crawlers"
@@ -9,9 +9,11 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1066", "variety", "https://variety.com")
+	engine := crawlers.Register("1065", "约克郡邮报", "https://www.yorkshirepost.co.uk/")
 
-	engine.SetStartingURLs([]string{"https://variety.com/sitemap_index.xml"})
+	engine.SetStartingURLs([]string{
+		"https://www.yorkshirepost.co.uk/sitemap.xml",
+	})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -19,7 +21,7 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -27,10 +29,14 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Text, "sitemap") {
+		if strings.Contains(element.Text, "articles") {
 			engine.Visit(element.Text, crawlers.Index)
+			return
+		}
+		if strings.Contains(element.Text, ".xml") {
 			return
 		}
 		engine.Visit(element.Text, crawlers.News)
 	})
+
 }
