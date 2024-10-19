@@ -1,17 +1,16 @@
 package dev
 
 import (
+	"github.com/gocolly/colly/v2"
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"time"
-
-	"github.com/gocolly/colly/v2"
+	"strings"
 )
 
 func init() {
 	engine := crawlers.Register("1070", "好莱坞记者", "https://www.hollywoodreporter.com")
 
-	engine.SetStartingURLs([]string{"https://www.hollywoodreporter.com/c/news/"})
+	engine.SetStartingURLs([]string{"https://www.hollywoodreporter.com/sitemap_index.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -26,12 +25,11 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML(".c-lazy-image > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.News)
+	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
+		if strings.Contains(element.Text, "post-sitemap") {
+			engine.Visit(element.Text, crawlers.Index)
+			return
+		}
+		engine.Visit(element.Text, crawlers.News)
 	})
-
-	engine.OnHTML(".lrv-a-wrapper > nav > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.Index)
-	})
-	time.Sleep(300 * time.Microsecond)
 }

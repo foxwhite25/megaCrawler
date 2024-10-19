@@ -1,24 +1,17 @@
 package dev
 
 import (
+	"github.com/gocolly/colly/v2"
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"time"
-
-	"github.com/gocolly/colly/v2"
+	"strings"
 )
 
 func init() {
 	engine := crawlers.Register("1064", "examinerlive", "https://www.examinerlive.co.uk/")
 
 	engine.SetStartingURLs([]string{
-		"https://www.examinerlive.co.uk/news/local-news/",
-		"https://www.examinerlive.co.uk/news/west-yorkshire-news/",
-		"https://www.examinerlive.co.uk/news/health/",
-		"https://www.examinerlive.co.uk/all-about/education",
-		"https://www.examinerlive.co.uk/all-about/crime",
-		"https://www.examinerlive.co.uk/all-about/politics",
-		"https://www.examinerlive.co.uk/news/uk-world-news/",
+		"https://www.examinerlive.co.uk/map_news.xml",
 	})
 
 	extractorConfig := extractors.Config{
@@ -34,13 +27,11 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML(".headline", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.News)
+	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
+		if strings.Contains(element.Text, ".xml") {
+			engine.Visit(element.Text, crawlers.Index)
+			return
+		}
+		engine.Visit(element.Text, crawlers.News)
 	})
-
-	engine.OnHTML(".pagi-next > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.Index)
-	})
-
-	time.Sleep(400 * time.Microsecond)
 }

@@ -1,12 +1,10 @@
 package dev
 
 import (
+	"github.com/gocolly/colly/v2"
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
 	"strings"
-	"time"
-
-	"github.com/gocolly/colly/v2"
 )
 
 func init() {
@@ -28,13 +26,11 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Text, "sitemap") {
+		if strings.Contains(element.Text, ".xml") {
 			engine.Visit(element.Text, crawlers.Index)
 			return
 		}
 
 		engine.Visit(element.Text, crawlers.News)
 	})
-
-	time.Sleep(300 * time.Microsecond) //休息
 }
