@@ -13,12 +13,12 @@ func init() {
 	engine := crawlers.Register("1772", "观察家报", "https://www.spectator.co.uk/")
 
 	// 网站“post-sitemap”太多，用循环建立列表
-	Sitemap_Part := "https://www.spectator.co.uk/post-sitemap"
-	Sitemap_Maximum := 1
-	Sitemaps := []string{}
+	SitemapPart := "https://www.spectator.co.uk/post-sitemap"
+	SitemapMaximum := 1
+	var Sitemaps []string
 
-	for i := 1; i <= Sitemap_Maximum; i++ {
-		Sitemap := fmt.Sprintf("%s%d.xml", Sitemap_Part, i)
+	for i := 1; i <= SitemapMaximum; i++ {
+		Sitemap := fmt.Sprintf("%s%d.xml", SitemapPart, i)
 		Sitemaps = append(Sitemaps, Sitemap)
 	}
 
