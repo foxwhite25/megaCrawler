@@ -1,4 +1,4 @@
-package dev
+package storage
 
 import (
 	"megaCrawler/crawlers"
@@ -9,11 +9,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1472", "澳大利亚教育与培训部", "https://www.education.gov.au/")
+	engine := crawlers.Register("1473", "澳大利亚就业部", "https://www.dewr.gov.au/newsroom")
 
-	engine.SetStartingURLs([]string{
-		"https://www.education.gov.au/sitemap.xml?page=1",
-	})
+	engine.SetStartingURLs([]string{"https://www.dewr.gov.au/sitemap.xml?page=1"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -28,8 +26,10 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
+	//这个网站和澳大利亚教育与培训部非常相似
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Text, "/announcements/") || strings.Contains(element.Text, "/newsroom/articles/") {
+		if strings.Contains(element.Text, "/announcements/") ||
+			strings.Contains(element.Text, "/newsroom/articles/") {
 			engine.Visit(element.Text, crawlers.News)
 		}
 	})
