@@ -1,10 +1,9 @@
 package dev
 
 import (
-	"fmt"
-
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -12,17 +11,7 @@ import (
 func init() {
 	engine := crawlers.Register("1772", "观察家报", "https://www.spectator.co.uk/")
 
-	// 网站“post-sitemap”太多，用循环建立列表
-	SitemapPart := "https://www.spectator.co.uk/post-sitemap"
-	SitemapMaximum := 1
-	var Sitemaps []string
-
-	for i := 1; i <= SitemapMaximum; i++ {
-		Sitemap := fmt.Sprintf("%s%d.xml", SitemapPart, i)
-		Sitemaps = append(Sitemaps, Sitemap)
-	}
-
-	engine.SetStartingURLs(Sitemaps)
+	engine.SetStartingURLs([]string{"https://www.spectator.co.uk/sitemap_index.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -38,10 +27,13 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
+		if strings.Contains(element.Request.URL.String(), "sitemap_index") {
+			if strings.Contains(element.Text, "post") {
+				ctx.Visit(element.Text, crawlers.Index)
+				return
+			}
+			return
+		}
 		ctx.Visit(element.Text, crawlers.News)
 	})
-
-	// engine.OnHTML(".entry-content", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-	// 	ctx.Content += element.Text
-	// })
 }

@@ -31,12 +31,8 @@ func init() {
 		switch {
 		case strings.Contains(element.Text, "post-sitemap"):
 			engine.Visit(element.Text, crawlers.Index)
-		default:
+		case !strings.Contains(element.Request.URL.String(), "sitemap_index.xml"):
 			engine.Visit(element.Text, crawlers.News)
 		}
 	})
-
-	// engine.OnHTML(".elementor-widget-container", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-	// 	ctx.Content += element.Text
-	// })
 }

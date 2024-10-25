@@ -1,10 +1,9 @@
 package dev
 
 import (
-	"strings"
-
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -28,10 +27,14 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Text, "daily") {
-			engine.Visit(element.Text, crawlers.Index)
-			engine.Visit(element.Text, crawlers.News)
+		if strings.Contains(element.Request.URL.String(), "sitemap.xml") {
+			if strings.Contains(element.Text, "daily") {
+				ctx.Visit(element.Text, crawlers.Index)
+				return
+			}
+			return
 		}
+		ctx.Visit(element.Text, crawlers.News)
 	})
 
 	// engine.OnHTML(".styles-m__story-content__1xPvO", func(element *colly.HTMLElement, ctx *crawlers.Context) {
