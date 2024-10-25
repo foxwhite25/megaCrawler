@@ -1,4 +1,4 @@
-package dev
+package storage
 
 import (
 	"strings"
@@ -10,9 +10,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1764", "Eturbo News", "https://eturbonews.com/")
+	engine := crawlers.Register("1771", "Pressenza International Press Agency", "https://www.pressenza.com/")
 
-	engine.SetStartingURLs([]string{"https://eturbonews.com/sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://www.pressenza.com/wp-sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -20,7 +20,7 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         false,
+		Text:         true,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -28,17 +28,13 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Request.URL.String(), "sitemap.xml") {
-			if strings.Contains(element.Text, "post") {
+		if strings.Contains(element.Request.URL.String(), "wp-sitemap.xml") {
+			if strings.Contains(element.Text, "wp-sitemap-posts-post") {
 				ctx.Visit(element.Text, crawlers.Index)
 				return
 			}
 			return
 		}
 		ctx.Visit(element.Text, crawlers.News)
-	})
-
-	engine.OnHTML(".vce-single", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content += element.Text
 	})
 }

@@ -1,4 +1,4 @@
-package dev
+package storage
 
 import (
 	"strings"
@@ -10,9 +10,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1771", "Pressenza International Press Agency", "https://www.pressenza.com/")
+	engine := crawlers.Register("1773", "巴基斯坦官方新闻", "https://en.dailypakistan.com.pk/")
 
-	engine.SetStartingURLs([]string{"https://www.pressenza.com/wp-sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://en.dailypakistan.com.pk/sitemap_index.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -28,13 +28,11 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Request.URL.String(), "wp-sitemap.xml") {
-			if strings.Contains(element.Text, "wp-sitemap-posts-post") {
-				ctx.Visit(element.Text, crawlers.Index)
-				return
-			}
-			return
+		switch {
+		case strings.Contains(element.Text, "post-sitemap"):
+			engine.Visit(element.Text, crawlers.Index)
+		case !strings.Contains(element.Request.URL.String(), "sitemap_index.xml"):
+			engine.Visit(element.Text, crawlers.News)
 		}
-		ctx.Visit(element.Text, crawlers.News)
 	})
 }
