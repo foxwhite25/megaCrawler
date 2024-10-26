@@ -50,8 +50,8 @@ func init() {
 
 	//设置Image的绝对URL
 	engine.OnHTML(".pic > a > img", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		imageUrl := element.Request.AbsoluteURL(element.Attr("src"))
-		ctx.Image = []string{imageUrl}
+		imageURL := element.Request.AbsoluteURL(element.Attr("src"))
+		ctx.Image = []string{imageURL}
 	})
 
 	//采集PDF
