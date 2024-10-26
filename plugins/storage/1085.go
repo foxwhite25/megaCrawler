@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -39,16 +40,16 @@ func init() {
 	engine.OnHTML(".ContentRoll__Headline > h2 > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		fileURL := element.Attr("href")
 
-		if strings.Contains(fileURL, "video") { //检查href中的URL是否为video
 
-			url, err := element.Request.URL.Parse(element.Attr("href")) //补全为完整URL
+
+			url, err := element.Request.URL.Parse(element.Attr("href")) // 补全为完整URL
 
 			if err != nil {
 				crawlers.Sugar.Error(err.Error())
 				return
 			}
 
-			ctx.Video = append(ctx.Video, url.String()) //将video添加进File
+			ctx.Video = append(ctx.Video, url.String()) // 将video添加进File
 
 			ctx.PageType = crawlers.Report
 		} else {

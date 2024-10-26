@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -34,7 +35,7 @@ func init() {
 		}
 	})
 
-	//公告和新闻不同的selector
+	// 公告和新闻不同的selector
 	engine.OnHTML(".node__content.clearfix > div > time, .container > time", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.PublicationTime = strings.TrimSpace(element.Text)
 	})

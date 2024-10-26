@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -26,7 +27,7 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	//这个网站和澳大利亚教育与培训部非常相似
+	// 这个网站和澳大利亚教育与培训部非常相似
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
 		if strings.Contains(element.Text, "/announcements/") ||
 			strings.Contains(element.Text, "/newsroom/articles/") {
@@ -34,7 +35,7 @@ func init() {
 		}
 	})
 
-	//公告和新闻不同的selector
+	// 公告和新闻不同的selector
 	engine.OnHTML(".node__content.clearfix > div > time, .container > time", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.PublicationTime = strings.TrimSpace(element.Text)
 	})

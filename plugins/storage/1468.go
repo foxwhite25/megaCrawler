@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -26,7 +27,7 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	//声明为Report
+	// 声明为Report
 	engine.OnHTML(".views-field.views-field-title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Report)
 	})
@@ -35,7 +36,7 @@ func init() {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
 
-	//采集PDF
+	// 采集PDF
 	engine.OnHTML(".field-content.press-release-attachement > a, li.first.last > a",
 		func(element *colly.HTMLElement, ctx *crawlers.Context) {
 			fileURL := element.Attr("href")

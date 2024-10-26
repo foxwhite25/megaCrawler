@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -28,7 +29,7 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	//总索引页和具体年份的索引页的链接selector是基本相同的，所以通过它们的strings区分
+	// 总索引页和具体年份的索引页的链接selector是基本相同的，所以通过它们的strings区分
 	engine.OnHTML(".exp_list_icn02 > li > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		if strings.Contains(element.Attr("href"), "index.html") {
 			url, err := element.Request.URL.Parse(element.Attr("href"))

@@ -1,10 +1,11 @@
 package storage
 
 import (
-	"megaCrawler/crawlers"
-	"megaCrawler/extractors"
 	"strings"
 	"time"
+
+	"megaCrawler/crawlers"
+	"megaCrawler/extractors"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -36,7 +37,7 @@ func init() {
 		}
 		engine.Visit(url.String(), crawlers.News)
 
-		time.Sleep(1 * time.Second) //设置延迟阻断
+		time.Sleep(1 * time.Second) // 设置延迟阻断
 	})
 
 	engine.OnHTML(".link > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
@@ -48,13 +49,13 @@ func init() {
 		engine.Visit(url.String(), crawlers.Index)
 	})
 
-	//设置Image的绝对URL
+	// 设置Image的绝对URL
 	engine.OnHTML(".pic > a > img", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		imageURL := element.Request.AbsoluteURL(element.Attr("src"))
 		ctx.Image = []string{imageURL}
 	})
 
-	//采集PDF
+	// 采集PDF
 	engine.OnHTML(".topien > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		fileURL := element.Attr("href")
 		if strings.Contains(fileURL, ".pdf") {

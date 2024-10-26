@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -47,7 +48,7 @@ func init() {
 		engine.Visit(url.String(), crawlers.Index)
 	})
 
-	//根据PDF的链接构建新的URL，构建后的URL为直接下载该PDF
+	// 根据PDF的链接构建新的URL，构建后的URL为直接下载该PDF
 	engine.OnHTML(".p-details-mix__item-content > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		fileURL := element.Attr("href")
 		if strings.Contains(fileURL, "view") {
@@ -81,5 +82,4 @@ func init() {
 	engine.OnHTML(".p-details-event__head > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
-
 }

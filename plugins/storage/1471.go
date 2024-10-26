@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -29,7 +30,7 @@ func init() {
 		TextLanguage: "",
 	}
 
-	//这里NEWS一般是纯新闻，其他是媒体中心的一些报告，通常包含PDF
+	// 这里NEWS一般是纯新闻，其他是媒体中心的一些报告，通常包含PDF
 	keywords := []string{"/media/", "/news/", "/media-centre/"}
 	extractorConfig.Apply(engine)
 
@@ -42,7 +43,7 @@ func init() {
 		}
 	})
 
-	//采集PDF
+	// 采集PDF
 	engine.OnHTML(".filesize > a, .file > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		fileURL := element.Attr("href")
 		if strings.Contains(fileURL, ".pdf") {
@@ -60,5 +61,4 @@ func init() {
 		func(element *colly.HTMLElement, ctx *crawlers.Context) {
 			ctx.Content += element.Text
 		})
-
 }
