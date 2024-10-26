@@ -1,16 +1,16 @@
 package dev
 
 import (
+	"github.com/gocolly/colly/v2"
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-
-	"github.com/gocolly/colly/v2"
 )
 
 func init() {
 	engine := crawlers.Register("1086", "印度快报", "http://www.indianexpress.com/")
 
-	engine.SetStartingURLs([]string{"http://www.indianexpress.com/"})
+	engine.SetStartingURLs([]string{"https://indianexpress.com/news-sitemap.xml"})
+
 	extractorConfig := extractors.Config{
 		Author:       true,
 		Image:        true,
@@ -24,10 +24,7 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML(".north-east-grid > ul >li > a ", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.News)
-	})
-	engine.OnHTML(".next page-numbers", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.Index)
+	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
+		ctx.Visit(element.Text, crawlers.News)
 	})
 }

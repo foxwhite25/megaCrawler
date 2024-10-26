@@ -3,6 +3,7 @@ package dev
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -10,11 +11,7 @@ import (
 func init() {
 	engine := crawlers.Register("1073", "DVB", "https://burmese.dvb.no/")
 
-	engine.SetStartingURLs([]string{
-		"https://english.dvb.no/category/long-reads/",
-		"https://english.dvb.no/category/daily-briefing/",
-		"https://english.dvb.no/category/news/",
-		"https://english.dvb.no/category/opinion/"})
+	engine.SetStartingURLs([]string{"https://burmese.dvb.no/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -22,19 +19,21 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
-		TextLanguage: "",
+		TextLanguage: "th",
 	}
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML(".td-module-thumb > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.News)
+	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
+		if !strings.Contains(element.Text, "/post/") {
+			return
+		}
+		ctx.Visit(element.Text, crawlers.News)
 	})
 
-	engine.OnHTML(".page-nav > a:last-of-type ", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.Index)
+	engine.OnHTML(".full_content", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content = crawlers.StandardizeSpaces(element.Text)
 	})
-
 }
