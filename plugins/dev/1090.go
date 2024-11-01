@@ -24,16 +24,22 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
 
 	extractorConfig.Apply(engine)
+
 	engine.OnHTML(".CatNewsFirst_FirstNews> h1 > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
+
 	engine.OnHTML(".holder > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
+	})
+
+	engine.OnHTML(".storydetails", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content = crawlers.StandardizeSpaces(element.Text)
 	})
 }

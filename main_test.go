@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/gocolly/colly/v2/proxy"
 	"os"
 	"strings"
 	"sync"
@@ -83,6 +84,17 @@ func TestTester(t *testing.T) {
 	logger := zap.New(fileCore)
 
 	crawlers.Sugar = logger.Sugar()
+
+	if p := os.Getenv("HTTP_PROXY"); p != "" {
+		fmt.Printf("Using Proxy %s\n", p)
+		rp, err := proxy.RoundRobinProxySwitcher(p)
+
+		if err == nil {
+			crawlers.Proxy = rp
+		} else {
+			crawlers.Sugar.Panicf("Cannot parse proxy in HTTP_PROXY: %s", p)
+		}
+	}
 
 	completed := 0
 	max := len(targets)

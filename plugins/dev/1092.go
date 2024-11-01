@@ -31,7 +31,6 @@ func init() {
 
 		case strings.Contains(element.Text, "sitemap"):
 			engine.Visit(element.Text, crawlers.Index)
-
 		default:
 			engine.Visit(element.Text, crawlers.News)
 		}
