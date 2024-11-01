@@ -39,21 +39,17 @@ func init() {
 
 	engine.OnHTML(".ContentRoll__Headline > h2 > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		fileURL := element.Attr("href")
-
-
-
-			url, err := element.Request.URL.Parse(element.Attr("href")) // 补全为完整URL
-
+		if strings.Contains(fileURL, "video") {
+			url, err := element.Request.URL.Parse(element.Attr("href"))
 			if err != nil {
 				crawlers.Sugar.Error(err.Error())
 				return
 			}
-
-			ctx.Video = append(ctx.Video, url.String()) // 将video添加进File
-
+			ctx.Video = append(ctx.Video, url.String())
 			ctx.PageType = crawlers.Report
 		} else {
 			ctx.Visit(element.Attr("href"), crawlers.News)
 		}
+
 	})
 }
