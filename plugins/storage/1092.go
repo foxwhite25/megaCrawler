@@ -1,4 +1,4 @@
-package dev
+package storage
 
 import (
 	"megaCrawler/crawlers"
@@ -9,9 +9,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1097", "西澳洲报", "https://www.thewest.com.au/")
+	engine := crawlers.Register("1092", "民族报", "https://www.nation.com.pk/")
 
-	engine.SetStartingURLs([]string{"https://thewest.com.au/sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://www.nation.com.pk/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -31,7 +31,6 @@ func init() {
 
 		case strings.Contains(element.Text, "sitemap"):
 			engine.Visit(element.Text, crawlers.Index)
-
 		default:
 			engine.Visit(element.Text, crawlers.News)
 		}

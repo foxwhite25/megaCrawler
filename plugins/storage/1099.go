@@ -1,4 +1,4 @@
-package dev
+package storage
 
 import (
 	"megaCrawler/crawlers"
@@ -9,9 +9,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1098", "政治家报", "http://www.thestatesman.com/")
+	engine := crawlers.Register("1099", "英国太阳报", "https://www.thesun.co.uk/")
 
-	engine.SetStartingURLs([]string{"https://www.thestatesman.com/sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://www.thesun.co.uk/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
