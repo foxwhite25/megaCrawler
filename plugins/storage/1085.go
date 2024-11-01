@@ -50,6 +50,5 @@ func init() {
 		} else {
 			ctx.Visit(element.Attr("href"), crawlers.News)
 		}
-
 	})
 }

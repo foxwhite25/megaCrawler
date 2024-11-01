@@ -1,15 +1,16 @@
 package dev
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	//事实上，英国所有的部门共用一个域名gov.uk，方便在相对的页面中查询资源，所以这几个网站基本相同
+	// 事实上，英国所有的部门共用一个域名gov.uk，方便在相对的页面中查询资源，所以这几个网站基本相同
 	engine := crawlers.Register("1483", "检察总长公署(UK)", "https://www.gov.uk/government/organisations/attorney-generals-office")
 
 	engine.SetStartingURLs([]string{

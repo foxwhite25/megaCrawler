@@ -1,9 +1,10 @@
 package dev
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -34,7 +35,7 @@ func init() {
 		}
 	})
 
-	//采集PDF
+	// 采集PDF
 	engine.OnHTML(".file.file--mime-application-pdf > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		fileURL := element.Attr("href")
 		if strings.Contains(fileURL, ".pdf") {
