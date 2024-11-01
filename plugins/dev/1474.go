@@ -9,9 +9,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("E470", "澳大利亚总检察院", "https://www.ag.gov.au/")
+	engine := crawlers.Register("1474", "澳大利亚总检察院", "https://www.ag.gov.au/")
 
-	engine.SetStartingURLs([]string{"https://www.ag.gov.au/sitemap.xml?page=2"})
+	engine.SetStartingURLs([]string{"https://www.ag.gov.au/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -27,7 +27,11 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Text, crawlers.News)
+		if strings.Contains(element.Text, ".xml") {
+			engine.Visit(element.Text, crawlers.Index)
+		} else {
+			engine.Visit(element.Text, crawlers.News)
+		}
 	})
 
 	//采集PDF
