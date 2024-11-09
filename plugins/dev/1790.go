@@ -1,9 +1,10 @@
 package dev
 
 import (
+	"time"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"time"
 
 	"github.com/gocolly/colly/v2"
 )

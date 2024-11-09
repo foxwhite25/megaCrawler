@@ -1,10 +1,12 @@
 package dev
 
 import (
+	"strings"
+
 	"github.com/gocolly/colly/v2"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 )
 
 func init() {
