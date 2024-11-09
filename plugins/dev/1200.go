@@ -35,5 +35,4 @@ func init() {
 	engine.OnHTML(".article-card__link", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Visit(element.Attr("href"), crawlers.News)
 	})
-
 }

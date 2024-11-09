@@ -1,9 +1,10 @@
 package dev
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -28,7 +29,6 @@ func init() {
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
 		switch {
-
 		case strings.Contains(element.Text, "sitemap"):
 			engine.Visit(element.Text, crawlers.Index)
 
