@@ -48,8 +48,8 @@ func init() {
 	})
 
 	engine.OnHTML(".col-md-12.col-lg-12.col-xs-12.col-sm-12 > img", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		imageUrl := element.Request.AbsoluteURL(element.Attr("src"))
-		ctx.Image = []string{imageUrl}
+		imageURL := element.Request.AbsoluteURL(element.Attr("src"))
+		ctx.Image = []string{imageURL}
 	})
 
 	engine.OnHTML(".col-md-12.col-lg-12.col-xs-12.col-sm-12 > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {

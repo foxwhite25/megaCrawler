@@ -49,8 +49,8 @@ func init() {
 	})
 
 	engine.OnHTML(".post-thumbnail > div > img", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		imageUrl := element.Request.AbsoluteURL(element.Attr("src"))
-		ctx.Image = []string{imageUrl}
+		imageURL := element.Request.AbsoluteURL(element.Attr("src"))
+		ctx.Image = []string{imageURL}
 	})
 
 	engine.OnHTML(".node__content.clearfix > div > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {

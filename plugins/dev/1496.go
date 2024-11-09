@@ -53,8 +53,8 @@ func init() {
 	})
 
 	engine.OnHTML(".col-md-9.news-read.pt-3 > img", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		imageUrl := element.Request.AbsoluteURL(element.Attr("src"))
-		ctx.Image = []string{imageUrl}
+		imageURL := element.Request.AbsoluteURL(element.Attr("src"))
+		ctx.Image = []string{imageURL}
 	})
 
 	engine.OnHTML(`.col-md-9.news-read.pt-3 > p[style*="text-align:justify;"],.col-md-9.news-read.pt-3 > p[align="justify"],
