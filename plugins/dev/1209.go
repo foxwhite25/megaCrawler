@@ -1,8 +1,6 @@
 package dev
 
 import (
-	"strings"
-
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
 
@@ -30,10 +28,13 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnHTML(".txt-list a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Visit(element.Attr("href"), crawlers.Report)
+		subCtx := ctx.CreateSubContext()
+		subCtx.File = append(subCtx.File, element.Attr("href"))
+		subCtx.Title = element.Text
+		subCtx.PageType = crawlers.Report
 	})
 
-	engine.OnHTML(".txt-list > li > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Title = strings.TrimSpace(element.Text)
+	engine.OnHTML(".side-list > li > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Visit(element.Attr("href"), crawlers.Index)
 	})
 }

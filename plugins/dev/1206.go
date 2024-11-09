@@ -20,7 +20,7 @@ func init() {
 		PublishDate:  true,
 		Tags:         true,
 		Text:         true,
-		Title:        true,
+		Title:        false,
 		TextLanguage: "",
 	}
 
@@ -37,4 +37,11 @@ func init() {
 		}
 	})
 
+	engine.OnHTML("#entry > .block", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text + "\n"
+	})
+
+	engine.OnHTML(".hdg", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Title = element.Text
+	})
 }

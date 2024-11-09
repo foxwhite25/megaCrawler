@@ -3,6 +3,7 @@ package dev
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -25,21 +26,15 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML(".innerLink", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		url, err := element.Request.URL.Parse(element.Attr("href"))
-		if err != nil {
-			crawlers.Sugar.Error(err.Error())
-			return
+	engine.OnHTML("body > div.wrapper > div > div.content > ul > li > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		if strings.Contains(element.Attr("href"), "index.html") {
+			ctx.Visit(element.Attr("href"), crawlers.Index)
+		} else {
+			ctx.Visit(element.Attr("href"), crawlers.News)
 		}
-		engine.Visit(url.String(), crawlers.Index)
 	})
 
-	engine.OnHTML(" .norcor a ", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.Index)
+	engine.OnHTML(".content", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content = element.Text
 	})
-
-	engine.OnHTML(" .content a ", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.News)
-	})
-
 }
