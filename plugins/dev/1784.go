@@ -1,18 +1,17 @@
 package dev
 
 import (
+	"github.com/gocolly/colly/v2"
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-
-	"github.com/gocolly/colly/v2"
+	"strings"
 )
 
 func init() {
 	engine := crawlers.Register("1784", "加拿大政府门户网", "https://www.canada.ca/en.html")
 
 	engine.SetStartingURLs([]string{
-		"https://www.canada.ca/en/news/advanced-news-search/news-results.html?start=&end=",
-		"https://www.canada.ca/en/news/archive-search/news-results.html?&start=&end=",
+		"https://www.canada.ca/sitemap.xml",
 	})
 
 	extractorConfig := extractors.Config{
@@ -28,15 +27,23 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML(".h5 > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Visit(element.Attr("href"), crawlers.News)
+	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
+		if ctx.URL == "https://www.canada.ca/sitemap.xml" {
+			if strings.Contains(element.Text, "/fr/") {
+				return
+			}
+			ctx.Visit(element.Text, crawlers.Index)
+			return
+		}
+		ctx.Visit(element.Text, crawlers.News)
 	})
 
-	engine.OnHTML(".cmp-text", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content += element.Text
+	engine.OnHTML("body > main[property=\"mainContentOfPage\"] > div", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content = element.Text
 	})
 
-	engine.OnHTML(".pagination > li:nth-last-child(1) > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Visit(element.Attr("href"), crawlers.Index)
+	engine.OnHTML(".gc-dwnld-lnk", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.File = append(ctx.File, element.Attr("href"))
+		ctx.PageType = crawlers.Report
 	})
 }

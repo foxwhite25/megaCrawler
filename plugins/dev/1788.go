@@ -3,6 +3,7 @@ package dev
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"time"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -24,6 +25,7 @@ func init() {
 	}
 
 	extractorConfig.Apply(engine)
+	engine.SetTimeout(60 * time.Second)
 
 	engine.OnHTML(".titletengah > b > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Visit(element.Attr("href"), crawlers.News)
@@ -33,7 +35,7 @@ func init() {
 		ctx.Content += element.Text
 	})
 
-	engine.OnHTML(".card-view > font > a:nth-last-child(2)", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".card-view > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Visit(element.Attr("href"), crawlers.Index)
 	})
 }

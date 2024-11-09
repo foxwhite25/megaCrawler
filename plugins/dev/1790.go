@@ -3,6 +3,7 @@ package dev
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"time"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -24,16 +25,17 @@ func init() {
 	}
 
 	extractorConfig.Apply(engine)
+	engine.SetTimeout(60 * time.Second)
 
 	engine.OnHTML(".btn.btn-outline-primary", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Visit(element.Attr("href"), crawlers.News)
 	})
 
-	engine.OnHTML(".container > div:nth-child(2)", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content += element.Text
+	engine.OnHTML("div.card:nth-child(2)", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content = crawlers.StandardizeSpaces(element.Text)
 	})
 
-	engine.OnHTML(".pagination > li:nth-last-child(2) > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".pagination > li > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Visit(element.Attr("href"), crawlers.Index)
 	})
 }
