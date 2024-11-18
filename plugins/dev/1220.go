@@ -29,10 +29,10 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnHTML(".field--name-title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.News)
+		ctx.Visit(element.Attr("href"), crawlers.News)
 	})
 
-	engine.OnHTML("a[rel=\"next\"]", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Attr("href"), crawlers.Index)
+	engine.OnHTML(".pager__item > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Visit(element.Attr("href"), crawlers.Index)
 	})
 }

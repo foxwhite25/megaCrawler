@@ -18,17 +18,23 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML("h2 > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".post-link", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-	engine.OnHTML(".next-link > a ", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+
+	engine.OnHTML(".page-number > a ", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
+	})
+
+	engine.OnHTML(".core-block", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
+		ctx.Content += "\n"
 	})
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1768", "num.org", "https://num.org.uk/")
+	engine := crawlers.Register("1212", "num.org", "https://num.org.uk/")
 
 	engine.SetStartingURLs([]string{"https://num.org.uk/news/"})
 
@@ -25,10 +25,11 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML(".entry-title  > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".entry-title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-	engine.OnHTML(".next ", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+
+	engine.OnHTML(".page-numbers", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
 }

@@ -28,7 +28,8 @@ func init() {
 	engine.OnHTML(".read-more > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-	engine.OnHTML(".next ", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+
+	engine.OnHTML(".page-numbers", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
 }
