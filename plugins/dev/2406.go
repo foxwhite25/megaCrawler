@@ -1,10 +1,11 @@
 package dev
 
 import (
-	"megaCrawler/crawlers"
-	"megaCrawler/extractors"
 	"strings"
 	"time"
+
+	"megaCrawler/crawlers"
+	"megaCrawler/extractors"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -14,7 +15,7 @@ func init() {
 
 	engine.SetStartingURLs([]string{"https://www.bkpm.go.id/id/info/siaran-pers"})
 
-	engine.SetTimeout(60 * time.Second) //延长等待时间
+	engine.SetTimeout(60 * time.Second) // 延长等待时间
 
 	extractorConfig := extractors.Config{
 		Author:       true,

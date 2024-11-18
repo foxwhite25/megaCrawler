@@ -1,9 +1,10 @@
 package dev
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -13,7 +14,7 @@ func init() {
 
 	engine.SetStartingURLs([]string{
 		"https://www.pom.go.id/berita",
-		"https://www.pom.go.id/siaran-pers", //专门关于食品安全的新闻
+		"https://www.pom.go.id/siaran-pers", // 专门关于食品安全的新闻
 	})
 
 	extractorConfig := extractors.Config{

@@ -1,9 +1,10 @@
 package dev
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -13,7 +14,7 @@ func init() {
 
 	engine.SetStartingURLs([]string{
 		"https://www.kemendag.go.id/berita/siaran-pers",
-		"https://www.kemendag.go.id/berita/perdagangan", //贸易新闻
+		"https://www.kemendag.go.id/berita/perdagangan", // 贸易新闻
 		"https://www.kemendag.go.id/berita/pojok-media",
 	})
 
