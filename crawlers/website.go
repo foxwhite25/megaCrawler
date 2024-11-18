@@ -200,7 +200,7 @@ func RetryRequest(r *colly.Request, err error, w *WebsiteEngine) {
 	if w.Test != nil && w.Test.Done {
 		return
 	}
-	go func() {
+	w.Runner.Go(func() {
 		left, waitTime := retryRequest(r, 10)
 
 		if left == 0 {
@@ -209,7 +209,7 @@ func RetryRequest(r *colly.Request, err error, w *WebsiteEngine) {
 		} else {
 			Sugar.Debugf("Website error tries %d for %s: %s, will wait for another %dms", left, r.URL.String(), err.Error(), waitTime)
 		}
-	}()
+	})
 }
 
 const maxDuration time.Duration = 1<<63 - 1
