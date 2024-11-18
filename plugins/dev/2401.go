@@ -27,21 +27,11 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnHTML(".article-header > h2 > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		url, err := element.Request.URL.Parse(element.Attr("href"))
-		if err != nil {
-			crawlers.Sugar.Error(err.Error())
-			return
-		}
-		engine.Visit(url.String(), crawlers.News)
+		ctx.Visit(element.Attr("href"), crawlers.News)
 	})
 
 	engine.OnHTML(".page-item > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		url, err := element.Request.URL.Parse(element.Attr("href"))
-		if err != nil {
-			crawlers.Sugar.Error(err.Error())
-			return
-		}
-		engine.Visit(url.String(), crawlers.Index)
+		ctx.Visit(element.Attr("href"), crawlers.Index)
 	})
 
 	engine.OnHTML("span.create > time", func(element *colly.HTMLElement, ctx *crawlers.Context) {
