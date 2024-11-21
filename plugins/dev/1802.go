@@ -1,4 +1,4 @@
-package storage
+package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1781", "卫生及社会关怀部", "https://www.gov.uk/government/organisations/department-of-health-and-social-care")
+	engine := crawlers.Register("1802", "英王陛下税务海关总署", "https://www.gov.uk/government/organisations/hm-revenue-customs")
 
-	engine.SetStartingURLs([]string{"https://www.gov.uk/search/news-and-communications?organisations[]=department-of-health-and-social-care&parent=department-of-health-and-social-care"})
+	engine.SetStartingURLs([]string{"https://www.gov.uk/search/news-and-communications?organisations[]=hm-revenue-customs&parent=hm-revenue-customs"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,

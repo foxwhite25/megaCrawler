@@ -1,4 +1,4 @@
-package storage
+package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -8,9 +8,11 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1781", "卫生及社会关怀部", "https://www.gov.uk/government/organisations/department-of-health-and-social-care")
+	engine := crawlers.Register("1796", "内政部", "https://www.gov.uk/government/organisations/home-office")
 
-	engine.SetStartingURLs([]string{"https://www.gov.uk/search/news-and-communications?organisations[]=department-of-health-and-social-care&parent=department-of-health-and-social-care"})
+	// 旧网址“http://www.homeoffice.gov.uk/”自动跳转到新网址“https://www.gov.uk/government/organisations/home-office”。
+
+	engine.SetStartingURLs([]string{"https://www.gov.uk/search/news-and-communications?organisations[]=home-office&parent=home-office"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
