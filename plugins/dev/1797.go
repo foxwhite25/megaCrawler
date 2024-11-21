@@ -27,7 +27,7 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML(".govuk-link.gem-print-link", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("#js-results a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Visit(element.Attr("href"), crawlers.News)
 	})
 
