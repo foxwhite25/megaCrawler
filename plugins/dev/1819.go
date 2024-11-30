@@ -29,8 +29,8 @@ func init() {
 		ctx.Visit(element.Attr("href"), crawlers.News)
 	})
 
-	engine.OnHTML(".region > div:nth-last-child(1) > div > article > div > div > div > div > div > div:nth-child(3) > div", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content += element.Text
+	engine.OnHTML(".paragraph", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text + "\n"
 	})
 
 	engine.OnHTML(".page-item.pager__item--next > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
