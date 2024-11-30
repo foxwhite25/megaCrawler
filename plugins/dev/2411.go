@@ -1,9 +1,10 @@
 package dev
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -26,7 +27,7 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	//这个网站的siteamp比较长
+	// 这个网站的siteamp比较长
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
 		if strings.Contains(element.Text, ".xml") {
 			engine.Visit(element.Text, crawlers.Index)

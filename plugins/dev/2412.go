@@ -1,9 +1,10 @@
 package dev
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -26,7 +27,7 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	//这包含所有的新闻索引页
+	// 这包含所有的新闻索引页
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
 		if strings.Contains(element.Text, "/category/") {
 			engine.Visit(element.Text, crawlers.Index)

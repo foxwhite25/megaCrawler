@@ -1,9 +1,10 @@
 package dev
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -43,7 +44,7 @@ func init() {
 		engine.Visit(url.String(), crawlers.Index)
 	})
 
-	//这个网站新闻页不同的网页结构非常多
+	// 这个网站新闻页不同的网页结构非常多
 	engine.OnHTML(`div.ecl > p, div.ecl > ul, 
 		div.gsc-bge-grid__area > p,
 		div.gsc-bge-grid__area > h4, div.gsc-bge-grid__area > ul:not([class]),

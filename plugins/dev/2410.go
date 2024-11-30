@@ -1,9 +1,10 @@
 package dev
 
 import (
+	"time"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"time"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -11,7 +12,7 @@ import (
 func init() {
 	engine := crawlers.Register("2410", "原子能管理委员会", "https://www.bapeten.go.id/")
 
-	engine.SetTimeout(60 * time.Second) //延长等待时间
+	engine.SetTimeout(60 * time.Second) // 延长等待时间
 
 	engine.SetStartingURLs([]string{"https://www.bapeten.go.id/site/pencarian?lang=id&kategori=2&search=#"})
 
