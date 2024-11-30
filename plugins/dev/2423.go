@@ -35,8 +35,8 @@ func init() {
 	})
 
 	engine.OnHTML("figure.embed.ezc-image > picture > img", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		imageUrl := element.Request.AbsoluteURL(element.Attr("src"))
-		ctx.Image = []string{imageUrl}
+		imageURL := element.Request.AbsoluteURL(element.Attr("src"))
+		ctx.Image = []string{imageURL}
 	})
 
 	engine.OnHTML("div.story-two.eza-body > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
