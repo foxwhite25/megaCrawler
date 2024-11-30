@@ -46,5 +46,4 @@ func init() {
 			directText := element.DOM.Contents().Not("noscript").Text()
 			ctx.Content += directText
 		})
-
 }

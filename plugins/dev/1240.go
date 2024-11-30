@@ -28,7 +28,7 @@ func init() {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
 	engine.OnHTML("a[title=\"Go to next page\"]", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		url, err := element.Request.URL.Parse(element.Attr("href")) //补全为完整URL
+		url, err := element.Request.URL.Parse(element.Attr("href")) // 补全为完整URL
 
 		if err != nil {
 			crawlers.Sugar.Error(err.Error())
