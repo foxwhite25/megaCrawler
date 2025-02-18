@@ -52,8 +52,8 @@ func init() {
 	})
 
 	engine.OnHTML("div.css-9mso2o > img", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		imageUrl := element.Request.AbsoluteURL(element.Attr("src"))
-		ctx.Image = []string{imageUrl}
+		imageURL := element.Request.AbsoluteURL(element.Attr("src"))
+		ctx.Image = []string{imageURL}
 	})
 
 	engine.OnHTML("section.css-1a2qmc3 > p, section.css-1a2qmc3 > h2, section.css-1a2qmc3 > ul",

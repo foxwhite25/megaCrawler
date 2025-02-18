@@ -49,8 +49,8 @@ func init() {
 	})
 
 	engine.OnHTML(".article-body > p > img", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		imageUrl := element.Request.AbsoluteURL(element.Attr("src"))
-		ctx.Image = []string{imageUrl}
+		imageURL := element.Request.AbsoluteURL(element.Attr("src"))
+		ctx.Image = []string{imageURL}
 	})
 
 	engine.OnHTML(".article-body > p,.article-body > h4", func(element *colly.HTMLElement, ctx *crawlers.Context) {
