@@ -52,5 +52,4 @@ func init() {
 			ctx.Content += articleBody
 		}
 	})
-
 }

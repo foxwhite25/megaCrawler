@@ -7,6 +7,7 @@ import (
 	"path"
 	"time"
 
+	// Load the sqlite handler
 	_ "github.com/mattn/go-sqlite3"
 )
 

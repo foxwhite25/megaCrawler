@@ -11,7 +11,7 @@ import (
 func init() {
 	engine := crawlers.Register("2432", "AmaBhungane", "https://amabhungane.org/")
 
-	engine.SetTimeout(60 * time.Second) //增加等待时间
+	engine.SetTimeout(60 * time.Second) // 增加等待时间
 
 	engine.SetStartingURLs([]string{
 		"https://amabhungane.org/post-sitemap.xml",

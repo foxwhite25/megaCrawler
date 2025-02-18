@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	//这个网站的新闻是对于设计作品的介绍
+	// 这个网站的新闻是对于设计作品的介绍
 	engine := crawlers.Register("2466", "Ads of the World", "https://www.adsoftheworld.com/")
 
 	engine.SetStartingURLs([]string{

@@ -10,7 +10,7 @@ import (
 func init() {
 	engine := crawlers.Register("2464", "Across Arizona Patch", "https://patch.com/")
 
-	//这个网站新闻按地区划分，且存在重复，这里选取一部分
+	// 这个网站新闻按地区划分，且存在重复，这里选取一部分
 	engine.SetStartingURLs([]string{
 		"https://patch.com/new-jersey/southorange?page=2",
 		"https://patch.com/new-jersey/summit?page=2",

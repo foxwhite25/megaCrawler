@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("2458", "ABC7", "https://abc7.com/") //后面的几个网站结构类似
+	engine := crawlers.Register("2458", "ABC7", "https://abc7.com/") // 后面的几个网站结构类似
 
 	engine.SetStartingURLs([]string{
 		"https://abc7.com/sitemap/news/interim-2024.xml",

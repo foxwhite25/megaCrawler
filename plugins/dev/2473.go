@@ -18,7 +18,7 @@ func init() {
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        false, //这个网站的图片链接需要网站完全加载后才加载
+		Image:        false, // 这个网站的图片链接需要网站完全加载后才加载
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,

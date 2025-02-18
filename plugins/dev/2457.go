@@ -13,7 +13,7 @@ func init() {
 	engine.SetStartingURLs([]string{"https://www.abc15.com/news"})
 
 	extractorConfig := extractors.Config{
-		Author:       false, //网站作者信息排版不规范
+		Author:       false, // 网站作者信息排版不规范
 		Image:        false,
 		Language:     true,
 		PublishDate:  true,

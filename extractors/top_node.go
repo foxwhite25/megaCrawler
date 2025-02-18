@@ -101,7 +101,7 @@ func CalculateBestNode(dom *goquery.Selection, language string) *goquery.Selecti
 		if isBootable(node, language) {
 			if i >= 0 {
 				boostScore = 1.0 / startingBoost
-				startingBoost += 1
+				startingBoost++
 			}
 		}
 
