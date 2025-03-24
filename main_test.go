@@ -124,7 +124,7 @@ func TestTester(t *testing.T) {
 			},
 			Sugar: crawlers.Sugar,
 		}
-		c.Test.WG.Add(len(c.GetStartingURL()))
+		c.Test.WG.Add(1)
 		go crawlers.StartEngine(c, true)
 		if waitTimeout(c.Test.WG, 2*time.Minute) {
 			if !c.Test.Done {
