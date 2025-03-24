@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("3408", "Blogcritics Science and Technology", "https://blogcritics.org/post-sitemap.xml")
+	engine := crawlers.Register("3408", "Blogcritics Science and Technology", "https://blogcritics.org/")
 
 	engine.SetStartingURLs([]string{"https://blogcritics.org/sitemap_index.xml"})
 
