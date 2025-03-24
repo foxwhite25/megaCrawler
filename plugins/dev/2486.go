@@ -3,7 +3,6 @@ package dev
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -11,7 +10,11 @@ import (
 func init() {
 	engine := crawlers.Register("2486", "Austin Daily Herald (Minnesota)", "https://www.austindailyherald.com/")
 
-	engine.SetStartingURLs([]string{"https://www.austindailyherald.com/wp-sitemap.xml"})
+	engine.SetStartingURLs([]string{
+		"https://www.austindailyherald.com/category/news/",
+		"https://www.austindailyherald.com/category/sports/",
+		"https://www.austindailyherald.com/category/opinion/",
+	})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -26,12 +29,12 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Text, "/wp-sitemap-posts-post") {
-			engine.Visit(element.Text, crawlers.Index)
-		} else if !strings.Contains(element.Text, ".xml") {
-			engine.Visit(element.Text, crawlers.News)
-		}
+	engine.OnHTML("div.story > h3.headline > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		engine.Visit(element.Attr("href"), crawlers.News)
+	})
+
+	engine.OnHTML("span.older_span > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
 
 	engine.OnHTML("div.story_detail > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
