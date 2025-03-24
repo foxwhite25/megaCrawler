@@ -54,7 +54,7 @@ jobs:
           cat table.txt >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
       - name: Upload Go log
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ steps.regex-match.outputs.match != '' }}
         with:
           name: Go-log-${{ matrix.go-version }}
@@ -67,8 +67,7 @@ jobs:
           reactions: rocket
           body: |         
             ## Edit: 本次运行已完成！
-            你可以在 [这里](https://foxwhite25.github.io/log-viewer/?auth=${{ secrets.VIEW_ONLY }}&run_id=${{ github.run_id }}) 看到 Log 。
-            或者直接在下方查看简单描述。
+            你可以在下方查看简单描述。
             ```
             ${{ env.RESULT }}
             ```
