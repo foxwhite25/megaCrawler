@@ -33,18 +33,4 @@ func init() {
 	engine.OnHTML(".export-article > h2 > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-
-	//采集PDF
-	engine.OnHTML(".files > div > ul > li:nth-last-child(2) > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		fileURL := element.Attr("href")
-		if strings.Contains(fileURL, ".pdf") {
-			url, err := element.Request.URL.Parse(element.Attr("href"))
-			if err != nil {
-				crawlers.Sugar.Error(err.Error())
-				return
-			}
-			ctx.File = append(ctx.File, url.String())
-			ctx.PageType = crawlers.Report
-		}
-	})
 }
