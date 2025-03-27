@@ -10,7 +10,7 @@ import (
 func init() {
 	engine := crawlers.Register("1276", "UNPRI", "https://www.unpri.org/")
 
-	engine.SetStartingURLs([]string{"https://www.unpri.org/press-releases/19864.more?navcode=1731"})
+	engine.SetStartingURLs([]string{"https://www.unpri.org/press-releases/29209.more?navcode=2143"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
