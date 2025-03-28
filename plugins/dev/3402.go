@@ -23,7 +23,7 @@ func init() {
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        true,
+		Image:        false,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
@@ -38,11 +38,8 @@ func init() {
 		engine.Visit(element.Text, crawlers.News)
 	})
 
-	engine.OnHTML("#post-content > p, #post-content > h2, #post-content > div > p",
+	engine.OnHTML("#post-content > p:not(:has(iframe)), #post-content > h2, #post-content > div > p:not(:has(iframe))",
 		func(element *colly.HTMLElement, ctx *crawlers.Context) {
-			element.DOM.Find("noscript").Remove()
-
-			directText := element.DOM.Text()
-			ctx.Content += directText
+			ctx.Content += element.Text
 		})
 }

@@ -26,7 +26,6 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	//需要降低请求频率
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
 		if strings.Contains(element.Text, ".xml") {
 			engine.Visit(element.Text, crawlers.Index)
@@ -37,6 +36,8 @@ func init() {
 
 	engine.OnHTML("div.RichTextArticleBody.RichTextBody p, div.RichTextArticleBody.RichTextBody > ul",
 		func(element *colly.HTMLElement, ctx *crawlers.Context) {
-			ctx.Content += element.Text
+			element.DOM.Find("script").Remove()
+			directText := element.DOM.Text()
+			ctx.Content += directText
 		})
 }
