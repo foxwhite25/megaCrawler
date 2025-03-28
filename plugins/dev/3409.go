@@ -14,7 +14,6 @@ func init() {
 
 	engine.SetTimeout(60 * time.Second)
 	engine.SetStartingURLs([]string{
-		// "https://www.bnl.gov/newsroom/results.php?kw=AAAS",
 		"https://www.bnl.gov/newsroom/tags/",
 	})
 
