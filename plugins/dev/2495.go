@@ -3,6 +3,7 @@ package dev
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -31,6 +32,6 @@ func init() {
 	})
 
 	engine.OnHTML("h2.entry-title,div.entry-content", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content += element.Text
+		ctx.Content += strings.Join(strings.Fields(element.Text), " ") // 去除换行符、制表符、多余空格
 	})
 }
