@@ -3,7 +3,6 @@ package dev
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -19,7 +18,7 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -32,5 +31,8 @@ func init() {
 
 	engine.OnHTML(".export-article > h2 > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
+	})
+	engine.OnHTML("#contenu > p,#contenu >.dash p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
 	})
 }
