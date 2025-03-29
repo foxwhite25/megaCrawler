@@ -1,6 +1,8 @@
 package dev
 
 import (
+	"strings"
+
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
 
@@ -14,7 +16,7 @@ func init() {
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        true,
+		Image:        false,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
@@ -26,10 +28,12 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		engine.Visit(element.Text, crawlers.News)
+		if strings.Contains(element.Text, "/20") {
+			engine.Visit(element.Text, crawlers.News)
+		}
 	})
 
-	engine.OnHTML(".col-md-11 > div", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".col-md-11 > div > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 }

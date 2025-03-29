@@ -14,7 +14,7 @@ func init() {
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        true,
+		Image:        false,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
@@ -29,7 +29,7 @@ func init() {
 		ctx.Visit(element.Attr("href"), crawlers.News)
 	})
 
-	engine.OnHTML(".entry-content.clear", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".entry-content.clear > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 

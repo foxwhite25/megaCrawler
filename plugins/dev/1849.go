@@ -10,11 +10,11 @@ import (
 func init() {
 	engine := crawlers.Register("1849", "ISC2", "https://www.isc2.org/")
 
-	engine.SetStartingURLs([]string{"https://www.isc2.org/api/rss/insights?utm_source=rss-feed"})
+	engine.SetStartingURLs([]string{"https://www.isc2.org/api/rss/insights"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        true,
+		Image:        false,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,

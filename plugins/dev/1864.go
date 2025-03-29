@@ -16,7 +16,7 @@ func init() {
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        true,
+		Image:        false,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
@@ -28,15 +28,14 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		switch {
-		case strings.Contains(element.Text, "articles_"):
+		if strings.Contains(element.Text, "articles_") {
 			engine.Visit(element.Text, crawlers.Index)
-		case strings.Contains(element.Text, "articles/"):
+		} else if strings.Contains(element.Text, "articles/") {
 			engine.Visit(element.Text, crawlers.News)
 		}
 	})
 
-	engine.OnHTML(".entry-content > div", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".entry-content > div,.col-sm-8 > div > #article-body", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 }

@@ -14,7 +14,7 @@ func init() {
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        true,
+		Image:        true, //大部分博客的图片有文字内容，建议不要关闭
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,

@@ -28,10 +28,9 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		switch {
-		case strings.Contains(element.Text, "post-sitemap"):
+		if strings.Contains(element.Text, "post-sitemap") {
 			engine.Visit(element.Text, crawlers.Index)
-		case strings.Contains(element.Text, "20"):
+		} else if strings.Contains(element.Text, "/20") {
 			engine.Visit(element.Text, crawlers.News)
 		}
 	})
