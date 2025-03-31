@@ -31,7 +31,7 @@ func init() {
 		now = reg.ReplaceAllString(now, "")
 		numStr = strings.Replace(numStr, "/", "", 1)
 		num, _ := strconv.Atoi(numStr)
-		num += 1
+		num++
 		numStr = "/" + strconv.Itoa(num)
 		newURL := now + numStr
 		w.Visit(newURL, crawlers.Index)

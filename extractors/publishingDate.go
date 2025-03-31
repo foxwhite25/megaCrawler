@@ -82,11 +82,12 @@ func getPublishingDate(dom *colly.HTMLElement) string {
 		if datetimeString == "" {
 			continue
 		}
-		if obj, err := pareDateStr(datetimeString); err == nil {
-			return obj.Format(time.RFC3339)
-		} else {
+		obj, err := pareDateStr(datetimeString)
+		if err != nil {
 			crawlers.Sugar.Info(err)
+			continue
 		}
+		return obj.Format(time.RFC3339)
 	}
 
 	if dateMatch := strictDateRegex.FindString(dom.Request.URL.String()); dateMatch != "" {

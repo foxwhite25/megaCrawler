@@ -1,14 +1,9 @@
 linters-settings:
   errcheck:
-    ignore: fmt:.*,io/ioutil:^Read.*
     ignoretests: true
 
   goimports:
-    local-prefixes: megaCrawler
-
-  gocritic:
-    disabled-checks:
-      - exitAfterDefer
+    local-prefixes: github.com/foxwhite25/megaCrawler
 
   forbidigo:
     # Forbid the following identifiers
@@ -22,41 +17,51 @@ linters:
   fast: false
   enable:
     - bodyclose
-    - durationcheck
+    #- depguard
+    - dogsled
+    - errcheck
+    #- exportloopref
+    - exhaustive
+    #- funlen
+    #- goconst
+    - gocritic
+    #- gocyclo
     - gofmt
     - goimports
-    - errcheck
-    - exportloopref
-    - exhaustive
-    - bidichk
-    - gocritic
+    - goprintffuncname
+    #- gosec
     - gosimple
     - govet
     - ineffassign
-    #- nolintlint
+    #- misspell
+    - nolintlint
+    - rowserrcheck
     - staticcheck
     - stylecheck
+    - typecheck
     - unconvert
-    - usestdlibvars
     - unparam
     - unused
     - whitespace
     - prealloc
     - predeclared
     - asciicheck
+    #    - revive
     - forbidigo
     - makezero
 
 run:
   # default concurrency is a available CPU number.
   # concurrency: 4 # explicitly omit this value to fully utilize available resources.
-  timeout: 5m
+  deadline: 5m
   issues-exit-code: 1
   tests: false
+  go: '1.20'
 
 # output configuration options
 output:
-  format: "colored-line-number"
+  formats:
+    - format: "colored-line-number"
   print-issued-lines: true
   print-linter-name: true
   uniq-by-line: true
@@ -67,3 +72,5 @@ issues:
   exclude-use-default: false
   exclude:
     - "Error return value of .((os.)?std(out|err)..*|.*Close|.*Seek|.*Flush|os.Remove(All)?|.*print(f|ln)?|os.(Un)?Setenv). is not check"
+    - 'identifier ".*" contain non-ASCII character: U\+.*'
+    - 'package-comment: .*'
