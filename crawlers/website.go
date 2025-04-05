@@ -138,6 +138,13 @@ func (w *WebsiteEngine) OnLaunch(callback func()) *WebsiteEngine {
 	return w
 }
 
+// 设置并发数量
+func (w *WebsiteEngine) SetParallelism(limit int) *WebsiteEngine {
+	parallelism := limit
+	w.Collector.parallelLimit = &parallelism
+	return w
+}
+
 func (w *WebsiteEngine) getCollector() (c *colly.Collector, ok error) {
 	cc := w.Collector
 	c = colly.NewCollector()
