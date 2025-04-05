@@ -1,4 +1,4 @@
-﻿package production
+﻿package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -11,22 +11,21 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1270", "PaulTan", "https://paultan.org/")
+	engine := crawlers.Register("1269", "One Dublin", "https://onedublin.org/")
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        false,
+		Image:        true,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
 
-	extractorConfig.Apply(engine)
 	engine.OnLaunch(func() {
-		baseURL := "https://paultan.org/topics/local-news/page/"
+		baseURL := "https://onedublin.org/page/"
 		for i := 0; true; i++ {
 			if engine.Test != nil && engine.Test.Done {
 				return
@@ -42,7 +41,7 @@ func init() {
 			if err != nil {
 				continue
 			}
-			urls := dom.Find(".xsmall > strong > a")
+			urls := dom.Find(".post-header > h2 > a")
 			if len(urls.Nodes) == 0 {
 				break
 			}
@@ -52,16 +51,17 @@ func init() {
 					return
 				}
 				engine.Visit(pageURL, crawlers.News)
-				engine.OnHTML(".post-content > p  img", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-					ctx.Image = append(ctx.Image, element.Attr("src"))
-				})
 			})
 
 			err = resp.Body.Close()
 			if err != nil {
 				continue
 			}
+
 		}
 	})
-
+	engine.OnHTML("div.entry > p , .wp-block-quote > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
+	})
+	extractorConfig.Apply(engine)
 }

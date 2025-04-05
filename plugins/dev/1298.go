@@ -1,4 +1,4 @@
-﻿package production
+﻿package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -14,11 +14,11 @@ func init() {
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        true,
+		Image:        false,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -29,5 +29,11 @@ func init() {
 	})
 	engine.OnHTML(".next", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
+	})
+	engine.OnHTML("div.thecontent > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
+	})
+	engine.OnHTML("h2[style=\"text-align: center;\"]", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.SubTitle += element.Text
 	})
 }
