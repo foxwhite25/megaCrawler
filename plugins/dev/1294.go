@@ -1,4 +1,4 @@
-﻿package production
+﻿package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -21,7 +21,7 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -38,5 +38,11 @@ func init() {
 			return //出现错误后打印错误并返回
 		}
 		engine.Visit(url.String(), crawlers.Index)
+	})
+	engine.OnHTML("div.pretitle_text > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
+	})
+	engine.OnHTML("div.big_text > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Description = element.Text
 	})
 }
