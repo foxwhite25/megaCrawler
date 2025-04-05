@@ -1,4 +1,4 @@
-﻿package production
+﻿package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -8,20 +8,17 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1296", "LENS", "https://thelensnola.org/")
+	engine := crawlers.Register("1279", "停止造假", "https://www.stopfake.org/ru/glavnaya-2/")
 
-	engine.SetStartingURLs([]string{
-		"https://thelensnola.org/category/schools/",
-		"https://thelensnola.org/category/government-and-politics/",
-		"https://thelensnola.org/category/behind-the-lens/"})
+	engine.SetStartingURLs([]string{"https://www.stopfake.org/ru/category/novosti/"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        true,
+		Image:        false,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -30,7 +27,10 @@ func init() {
 	engine.OnHTML(".entry-title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-	engine.OnHTML(".next", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".page-nav > a:last-of-type", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
+	})
+	engine.OnHTML(".td-post-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
 	})
 }

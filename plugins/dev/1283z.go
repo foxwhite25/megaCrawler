@@ -1,4 +1,4 @@
-﻿package production
+﻿package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -8,9 +8,11 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1295", "西撒哈拉资源观察", "https://wsrw.org/en")
+	engine := crawlers.Register("1283z", "议会与卫生监察会", "https://www.ombudsman.org.uk/")
 
-	engine.SetStartingURLs([]string{"https://wsrw.org/en/news"})
+	engine.SetStartingURLs([]string{
+		"https://www.ombudsman.org.uk/news-and-blog/news",
+		"https://www.ombudsman.org.uk/news-and-blog/blog"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -18,16 +20,16 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
 
 	extractorConfig.Apply(engine)
-	engine.OnHTML(".text-lg > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".news-post__link", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-	engine.OnHTML(".justify-center > li:last-of-type > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".pager__item--next > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		url, err := element.Request.URL.Parse(element.Attr("href")) //补全为完整URL
 
 		if err != nil {
@@ -35,5 +37,8 @@ func init() {
 			return //出现错误后打印错误并返回
 		}
 		engine.Visit(url.String(), crawlers.Index)
+	})
+	engine.OnHTML(".news-post > div >p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
 	})
 }

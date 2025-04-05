@@ -1,4 +1,4 @@
-﻿package production
+﻿package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -18,7 +18,7 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -41,5 +41,8 @@ func init() {
 	})
 	engine.OnHTML(".Page-authors > span > a , .Page-authors > span > span", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Authors = append(ctx.Authors, element.Text)
+	})
+	engine.OnHTML("body > div.Page-content > div.Page-oneColumn > main > bsp-article-page-body > div.RichTextArticleBody.RichTextBody > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
 	})
 }

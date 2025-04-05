@@ -1,4 +1,4 @@
-﻿package production
+﻿package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -7,10 +7,11 @@ import (
 	"strconv"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	engine := crawlers.Register("1269", "One Dublin", "https://onedublin.org/")
+	engine := crawlers.Register("1284", "SANEF", "https://sanef.org.za/")
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -18,19 +19,21 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
 
+	extractorConfig.Apply(engine)
+
 	engine.OnLaunch(func() {
-		baseURL := "https://onedublin.org/page/"
-		for i := 0; true; i++ {
+		baseURL := "https://sanef.org.za/category/news/page/"
+		for i := 1; true; i++ {
 			if engine.Test != nil && engine.Test.Done {
 				return
 			}
 
-			pageURL := baseURL + strconv.Itoa(i)
+			pageURL := baseURL + strconv.Itoa(i) + "/?tf-scroll=1"
 			resp, err := http.Get(pageURL)
 			if err != nil {
 				continue
@@ -40,7 +43,7 @@ func init() {
 			if err != nil {
 				continue
 			}
-			urls := dom.Find(".post-header > h2 > a")
+			urls := dom.Find(".post-image > a")
 			if len(urls.Nodes) == 0 {
 				break
 			}
@@ -50,6 +53,7 @@ func init() {
 					return
 				}
 				engine.Visit(pageURL, crawlers.News)
+
 			})
 
 			err = resp.Body.Close()
@@ -58,5 +62,7 @@ func init() {
 			}
 		}
 	})
-	extractorConfig.Apply(engine)
+	engine.OnHTML(".entry-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
+	})
 }

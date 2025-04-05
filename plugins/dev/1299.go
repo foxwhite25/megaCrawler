@@ -1,4 +1,4 @@
-﻿package production
+﻿package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -14,11 +14,11 @@ func init() {
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        true,
+		Image:        false,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -29,5 +29,11 @@ func init() {
 	})
 	engine.OnHTML(".next", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
+	})
+	engine.OnHTML("div.the_content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		// 移除 p 标签中的所有 noscript 标签
+		element.DOM.Find("iframe").Remove()
+		directText := element.DOM.Text()
+		ctx.Content += directText
 	})
 }
