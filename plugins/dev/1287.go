@@ -1,4 +1,4 @@
-﻿package production
+﻿package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -8,20 +8,20 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1296", "LENS", "https://thelensnola.org/")
+	engine := crawlers.Register("1287", "TOL", "https://tol.org/")
 
 	engine.SetStartingURLs([]string{
-		"https://thelensnola.org/category/schools/",
-		"https://thelensnola.org/category/government-and-politics/",
-		"https://thelensnola.org/category/behind-the-lens/"})
+		"https://tol.org/client/article/category/topics/business",
+		"https://tol.org/client/article/category/topics/culture",
+		"https://tol.org/client/article/category/regions/central-asia"})
 
 	extractorConfig := extractors.Config{
-		Author:       true,
+		Author:       false,
 		Image:        true,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -32,5 +32,11 @@ func init() {
 	})
 	engine.OnHTML(".next", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
+	})
+	engine.OnHTML(".entry-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
+	})
+	engine.OnHTML("span.author", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Authors = append(ctx.Authors, element.Text)
 	})
 }

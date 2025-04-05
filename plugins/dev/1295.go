@@ -1,8 +1,9 @@
-﻿package production
+﻿package dev
 
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -16,9 +17,9 @@ func init() {
 		Author:       true,
 		Image:        true,
 		Language:     true,
-		PublishDate:  true,
+		PublishDate:  false,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -35,5 +36,11 @@ func init() {
 			return //出现错误后打印错误并返回
 		}
 		engine.Visit(url.String(), crawlers.Index)
+	})
+	engine.OnHTML("div.ck-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
+	})
+	engine.OnHTML("div.border-gray-500 > span", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.PublicationTime = strings.TrimSpace(element.Text)
 	})
 }

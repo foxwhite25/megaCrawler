@@ -1,4 +1,4 @@
-﻿package production
+﻿package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -7,14 +7,15 @@ import (
 	"strconv"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	engine := crawlers.Register("1269", "One Dublin", "https://onedublin.org/")
+	engine := crawlers.Register("1270", "PaulTan", "https://paultan.org/")
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        true,
+		Image:        false,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
@@ -23,8 +24,9 @@ func init() {
 		TextLanguage: "",
 	}
 
+	extractorConfig.Apply(engine)
 	engine.OnLaunch(func() {
-		baseURL := "https://onedublin.org/page/"
+		baseURL := "https://paultan.org/topics/local-news/page/"
 		for i := 0; true; i++ {
 			if engine.Test != nil && engine.Test.Done {
 				return
@@ -40,7 +42,7 @@ func init() {
 			if err != nil {
 				continue
 			}
-			urls := dom.Find(".post-header > h2 > a")
+			urls := dom.Find(".xsmall > strong > a")
 			if len(urls.Nodes) == 0 {
 				break
 			}
@@ -50,6 +52,9 @@ func init() {
 					return
 				}
 				engine.Visit(pageURL, crawlers.News)
+				engine.OnHTML(".post-content > p  img", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+					ctx.Image = append(ctx.Image, element.Attr("src"))
+				})
 			})
 
 			err = resp.Body.Close()
@@ -58,5 +63,12 @@ func init() {
 			}
 		}
 	})
-	extractorConfig.Apply(engine)
+	engine.OnHTML(".post-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		// 移除 p 标签中的所有 noscript 标签
+		element.DOM.Find("a").Remove()
+		element.DOM.Find("img").Remove()
+		directText := element.DOM.Text()
+		ctx.Content += directText
+	})
+
 }
