@@ -2,5 +2,5 @@
 package main
 
 import (
-	_ "megaCrawler/plugins/dev"
+	_ "megaCrawler/plugins/production"
 )
