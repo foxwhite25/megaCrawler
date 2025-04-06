@@ -1,4 +1,4 @@
-﻿package production
+﻿package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -18,7 +18,7 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -29,5 +29,11 @@ func init() {
 	})
 	engine.OnHTML(".next", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
+	})
+	engine.OnHTML("#left-col > p, ul > li  em", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		// 移除标签中的所有无关标签
+		element.DOM.Find("img").Remove()
+		directText := element.DOM.Text()
+		ctx.Content += directText
 	})
 }

@@ -1,30 +1,31 @@
-﻿package production
+﻿package dev
 
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	engine := crawlers.Register("1290", "UKFINANCE.UK", "https://www.ukfinance.org.uk/")
+	engine := crawlers.Register("1293", "世界黄金协会", "https://www.gold.org/")
 
-	engine.SetStartingURLs([]string{"https://www.ukfinance.org.uk/news-and-insight"})
+	engine.SetStartingURLs([]string{"https://www.gold.org/news"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
 		Image:        true,
 		Language:     true,
-		PublishDate:  true,
+		PublishDate:  false,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
 
 	extractorConfig.Apply(engine)
-	engine.OnHTML(".card_title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".m-grid > wgc-card > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
 	engine.OnHTML("a[title=\"Go to next page\"]", func(element *colly.HTMLElement, ctx *crawlers.Context) {
@@ -35,5 +36,11 @@ func init() {
 			return //出现错误后打印错误并返回
 		}
 		engine.Visit(url.String(), crawlers.Index)
+	})
+	engine.OnHTML("div.wgc-text > p , .field-main-content > div > p ", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
+	})
+	engine.OnHTML("time.datetime", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.PublicationTime = strings.TrimSpace(element.Text)
 	})
 }

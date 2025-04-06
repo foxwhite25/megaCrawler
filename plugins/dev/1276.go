@@ -1,8 +1,9 @@
-﻿package production
+﻿package dev
 
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -16,9 +17,9 @@ func init() {
 		Author:       true,
 		Image:        true,
 		Language:     true,
-		PublishDate:  true,
+		PublishDate:  false,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -29,5 +30,11 @@ func init() {
 	})
 	engine.OnHTML(".next", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
+	})
+	engine.OnHTML("span.date", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.PublicationTime = strings.TrimSpace(element.Text)
+	})
+	engine.OnHTML("div.storytext > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
 	})
 }
