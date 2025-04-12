@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("z-0018", "", "https://news.detik.com/")
+	engine := crawlers.Register("z-0018", "NEWS.DETIK", "https://news.detik.com/")
 
 	engine.SetStartingURLs([]string{
 		"https://news.detik.com/indeks",
