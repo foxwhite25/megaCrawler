@@ -1,4 +1,4 @@
-package production
+package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -12,12 +12,11 @@ func init() {
 
 	engine.SetStartingURLs([]string{
 		"https://www.kln.gov.my/web/guest/press-releases",
-		"https://www.kln.gov.my/web/guest/speeches-statements",
 	})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        true,
+		Image:        false,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
