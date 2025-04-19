@@ -1,4 +1,4 @@
-package production
+package dev
 
 import (
 	"encoding/json"
@@ -68,7 +68,7 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnLaunch(func() {
-		for page := 14; page <= 500; page += 10 {
+		for page := 14; page <= 40000; page += 10 {
 			FetchAndVisitArticles(engine, page)
 		}
 	})
