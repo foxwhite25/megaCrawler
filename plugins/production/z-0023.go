@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
@@ -8,9 +8,8 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("z-0029", "TRUTH_MARKET", "https://truthonthemarket.com/")
-
-	engine.SetStartingURLs([]string{"https://truthonthemarket.com/?s="})
+	engine := crawlers.Register("z-0023", "婆罗洲邮报", "https://www.theborneopost.com/")
+	engine.SetStartingURLs([]string{"https://www.theborneopost.com/world/"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -24,7 +23,7 @@ func init() {
 	}
 
 	extractorConfig.Apply(engine)
-	engine.OnHTML("a.post-listing__title", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.read-more > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
 	engine.OnHTML("a.next", func(element *colly.HTMLElement, ctx *crawlers.Context) {
@@ -35,7 +34,8 @@ func init() {
 		}
 		engine.Visit(url.String(), crawlers.Index)
 	})
-	engine.OnHTML("div.dropcap-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.post-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
+
 }
