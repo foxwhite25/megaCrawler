@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
@@ -9,12 +9,12 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("z-0027", "TREASURY", "https://home.treasury.gov/")
+	engine := crawlers.Register("z-0031", "VERMON", "https://vermontbiz.com/")
 
-	engine.SetStartingURLs([]string{"https://home.treasury.gov/news/press-releases"})
+	engine.SetStartingURLs([]string{"https://vermontbiz.com/news"})
 
 	extractorConfig := extractors.Config{
-		Author:       true,
+		Author:       false,
 		Image:        true,
 		Language:     true,
 		PublishDate:  false,
@@ -25,7 +25,7 @@ func init() {
 	}
 
 	extractorConfig.Apply(engine)
-	engine.OnHTML("h3.featured-stories__headline > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("h2.field-content > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
 	engine.OnHTML("li.pager__item--next > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
@@ -36,10 +36,15 @@ func init() {
 		}
 		engine.Visit(url.String(), crawlers.Index)
 	})
-	engine.OnHTML("div.date-format >time.datetime", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("span.field--name-uid > span", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Authors = append(ctx.Authors, element.Text)
+	})
+	engine.OnHTML("time[datetime]", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.PublicationTime = strings.TrimSpace(element.Text)
 	})
-	engine.OnXML("//article/div/div[2]/p[not(contains(@class,\"text-align-center\"))]/text()", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		ctx.Content += element.Text
+	engine.OnHTML("div.content > div > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		element.DOM.Find("a").Remove()
+		directText := element.DOM.Text()
+		ctx.Content += directText
 	})
 }

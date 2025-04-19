@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
@@ -9,9 +9,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("X0023", "内政部", "https://www.gov.uk/government/organisations/home-office")
-	// 网站http://www.homeoffice.gov.uk/变更为https://www.gov.uk/government/organisations/home-office
-	engine.SetStartingURLs([]string{"https://www.gov.uk/search/news-and-communications?organisations[]=home-office&parent=home-office"})
+	engine := crawlers.Register("X0025", "司法部", "https://www.gov.uk/government/organisations/hm-courts-and-tribunals-service")
+	// 网站https://www.justice.gov.uk/变更为https://www.gov.uk/government/organisations/hm-courts-and-tribunals-service
+	engine.SetStartingURLs([]string{"https://www.gov.uk/search/news-and-communications?organisations[]=hm-courts-and-tribunals-service&parent=hm-courts-and-tribunals-service"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -34,7 +34,7 @@ func init() {
 		ctx.PublicationTime = strings.TrimSpace(element.Text)
 	})
 
-	engine.OnHTML(".govspeak", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".responsive-bottom-margin .govspeak", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		element.DOM.Find("a").Remove()
 		directText := element.DOM.Text()
 		ctx.Content += directText
