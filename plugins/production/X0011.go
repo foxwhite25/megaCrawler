@@ -9,9 +9,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("X0003", "菲华网", "https://www.phhua.com/")
+	engine := crawlers.Register("X0011", "巴中研究院", "https://www.pakistan-china.com/")
 
-	engine.SetStartingURLs([]string{"https://www.phhua.com/news/"})
+	engine.SetStartingURLs([]string{"https://www.pakistan-china.com/mn-latest-news.php?page=1"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -26,19 +26,19 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML(".li_item_right > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".col-sm-9 > p > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Visit(element.Attr("href"), crawlers.News)
 	})
 
-	engine.OnHTML(".max_screen > .content_date", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnXML("//*[@id=\"content\"]/div/div/p[1]/text()[3]", func(element *colly.XMLElement, ctx *crawlers.Context) {
 		ctx.PublicationTime = strings.TrimSpace(element.Text)
 	})
 
-	engine.OnHTML(".content_content > div", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".my-border > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 
-	engine.OnHTML(".loadmore > strong + a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".prnr", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Visit(element.Attr("href"), crawlers.Index)
 	})
 }

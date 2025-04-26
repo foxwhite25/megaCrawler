@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("1256", "紧盯共和", "https://thoughtsandrantings.com/")
+	engine := crawlers.Register("z-0024", "紧盯共和", "https://thoughtsandrantings.com/")
 
 	engine.SetStartingURLs([]string{"https://thoughtsandrantings.com/"})
 
@@ -18,7 +18,7 @@ func init() {
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
-		Text:         true,
+		Text:         false,
 		Title:        true,
 		TextLanguage: "",
 	}
@@ -29,5 +29,8 @@ func init() {
 	})
 	engine.OnHTML(".nav-previous > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
+	})
+	engine.OnHTML("div.entry-content p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
 	})
 }

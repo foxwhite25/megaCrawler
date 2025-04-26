@@ -9,9 +9,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("N-0007", "The Peninsula", "https://thepeninsulaqatar.com")
+	engine := crawlers.Register("N-0028", "Canon City Daily Record", "https://www.canoncitydailyrecord.com/")
 
-	engine.SetStartingURLs([]string{"https://thepeninsulaqatar.com/sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://www.canoncitydailyrecord.com/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -27,14 +27,14 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Text, "/sitemap_articles") {
+		if strings.Contains(element.Text, "/sitemap.xml") {
 			engine.Visit(element.Text, crawlers.Index)
-		} else if !strings.Contains(element.Text, ".xml") {
+		} else {
 			engine.Visit(element.Text, crawlers.News)
 		}
 	})
 
-	engine.OnHTML("div.con-text > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.body-copy > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 }
