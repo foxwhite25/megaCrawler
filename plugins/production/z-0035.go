@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
@@ -9,9 +9,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("z-0038", "UPNG", "https://www.upng.ac.pg/")
+	engine := crawlers.Register("z-0035", "PICRC.ORG", "https://picrc.org/")
 
-	engine.SetStartingURLs([]string{"https://www.upng.ac.pg/news"})
+	engine.SetStartingURLs([]string{"https://picrc.org/news/"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -25,10 +25,10 @@ func init() {
 	}
 
 	extractorConfig.Apply(engine)
-	engine.OnHTML("a.btn-secondary,li.com-content-blog__link > a,mod-articleslatest", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.border-b > p > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-	engine.OnHTML("a[aria-label=\"Go to next page\"]", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.justify-end > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		url, err := element.Request.URL.Parse(element.Attr("href"))
 		if err != nil {
 			crawlers.Sugar.Error(err.Error())
@@ -36,10 +36,10 @@ func init() {
 		}
 		engine.Visit(url.String(), crawlers.Index)
 	})
-	engine.OnXML("//*[@id=\"g-main\"]/div[2]/div/div/div/div/div/div/dl[1]/dd[2]/time/text()", func(element *colly.XMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.postDate", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.PublicationTime = strings.TrimSpace(element.Text)
 	})
-	engine.OnHTML("div.com-content-article__body > p,div.com-content-article__body > ul", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.textArea > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 }

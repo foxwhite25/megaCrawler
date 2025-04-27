@@ -1,23 +1,20 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
 	"strings"
-	"time"
 
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	engine := crawlers.Register("N-0038", "Vietnam Economic Times", "https://vneconomy.vn/")
+	engine := crawlers.Register("N-0032", "Tin tức Zing", "https://znews.vn/")
 
-	engine.SetTimeout(60 * time.Second)
-
-	engine.SetStartingURLs([]string{"https://vneconomy.vn/sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://znews.vn/sitemap/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
-		Author:       false,
+		Author:       true,
 		Image:        false,
 		Language:     true,
 		PublishDate:  true,
@@ -30,18 +27,19 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Text, "/sitemap/news-202") {
+		if strings.Contains(element.Text, "/sitemap/sitemap-article-2025") ||
+			strings.Contains(element.Text, "/sitemap/sitemap-article-2024") {
 			engine.Visit(element.Text, crawlers.Index)
 		} else if !strings.Contains(element.Text, ".xml") {
 			engine.Visit(element.Text, crawlers.News)
 		}
 	})
 
-	engine.OnHTML("div.detail__author", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Authors = append(ctx.Authors, strings.TrimSpace(element.Text))
+	engine.OnHTML("section.main > p.the-article-summary", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Description += element.Text
 	})
 
-	engine.OnHTML("div.detail__content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.the-article-body > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 }
