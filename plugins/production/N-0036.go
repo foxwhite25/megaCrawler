@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
@@ -9,9 +9,11 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("N-0032", "Tin tức Zing", "https://znews.vn/")
+	engine := crawlers.Register("N-0036", "Sài Gòn Giải Phóng", "https://www.sggp.org.vn")
 
-	engine.SetStartingURLs([]string{"https://znews.vn/sitemap/sitemap.xml"})
+	engine.SetParallelism(2) //限制进程
+
+	engine.SetStartingURLs([]string{"https://www.sggp.org.vn/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -27,19 +29,14 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Text, "/sitemap/sitemap-article-2025") ||
-			strings.Contains(element.Text, "/sitemap/sitemap-article-2024") {
+		if strings.Contains(element.Text, "/sitemaps/news-202") {
 			engine.Visit(element.Text, crawlers.Index)
 		} else if !strings.Contains(element.Text, ".xml") {
 			engine.Visit(element.Text, crawlers.News)
 		}
 	})
 
-	engine.OnHTML("section.main > p.the-article-summary", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Description += element.Text
-	})
-
-	engine.OnHTML("div.the-article-body > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.article__body > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 }

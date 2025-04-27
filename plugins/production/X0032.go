@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
@@ -9,9 +9,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("N-0039", "Thai PBS", "https://www.thaipbs.or.th/") //这是个泰语网站
-
-	engine.SetStartingURLs([]string{"https://www.thaipbs.or.th/sitemap/sitemap_news_monthly.xml"})
+	engine := crawlers.Register("X0032", "北苏门答腊省", "https://infosumut.id/")
+	// https://www.sumutprov.go.id/的新闻网站为https://infosumut.id/
+	engine.SetStartingURLs([]string{"https://infosumut.id/sitemap_index.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -27,18 +27,14 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Text, "/sitemap/sitemap-news/") {
+		if strings.Contains(element.Text, "post-sitemap") {
 			engine.Visit(element.Text, crawlers.Index)
 		} else if !strings.Contains(element.Text, ".xml") {
 			engine.Visit(element.Text, crawlers.News)
 		}
 	})
 
-	engine.OnHTML("div.hyQLlk > div:nth-child(2) > span", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.PublicationTime = element.Text
-	})
-
-	engine.OnHTML("#item-description > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content += strings.Join(strings.Fields(element.Text), " ")
+	engine.OnHTML(".entry-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
 	})
 }

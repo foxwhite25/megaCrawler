@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
@@ -8,13 +8,14 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("z-0037", "POSTCOURIER", "https://www.postcourier.com.pg/")
+	engine := crawlers.Register("z-0034", "ISLANDTIMES", "https://islandtimes.org/")
 
 	engine.SetStartingURLs([]string{
-		"https://www.postcourier.com.pg/national-news/",
-		"https://www.postcourier.com.pg/world-news/",
-		"https://www.postcourier.com.pg/top-stories/",
-		"https://www.postcourier.com.pg/business/"})
+		"https://islandtimes.org/category/world-news/",
+		"https://islandtimes.org/category/top-stories/",
+		"https://islandtimes.org/category/pacific-news/",
+		"https://islandtimes.org/category/opinion/",
+		"https://islandtimes.org/category/sports/"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -31,7 +32,7 @@ func init() {
 	engine.OnHTML("h2.entry-title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-	engine.OnHTML("div.nav-links > a.next", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.nav-links > a.next ", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		url, err := element.Request.URL.Parse(element.Attr("href"))
 		if err != nil {
 			crawlers.Sugar.Error(err.Error())
