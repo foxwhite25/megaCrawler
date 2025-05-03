@@ -1,4 +1,4 @@
-package production
+package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -25,10 +25,10 @@ func init() {
 	}
 
 	extractorConfig.Apply(engine)
-	engine.OnHTML("div.border-b > p > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.newsBox > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-	engine.OnHTML("div.justify-end > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("a.next", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		url, err := element.Request.URL.Parse(element.Attr("href"))
 		if err != nil {
 			crawlers.Sugar.Error(err.Error())
