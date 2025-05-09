@@ -13,16 +13,16 @@ import (
 	"github.com/gocolly/colly/v2"
 )
 
-type Article struct {
+type Article_N43 struct {
 	Link string `json:"link"`
 }
 
-type Response struct {
-	Data []Article `json:"data"`
+type Response_N43 struct {
+	Data []Article_N43 `json:"data"`
 }
 
 // 等待增加新闻数据数量
-func FetchAndVisitArticles(engine *crawlers.WebsiteEngine, page int) {
+func FetchAndVisitArticlesN43(engine *crawlers.WebsiteEngine, page int) {
 	url := fmt.Sprintf("https://api.posttoday.com/api/v1.0/categories/politics?page=%d", page)
 	resp, err := http.Get(url)
 	if err != nil {
@@ -37,7 +37,7 @@ func FetchAndVisitArticles(engine *crawlers.WebsiteEngine, page int) {
 		return
 	}
 
-	var jsonResp Response
+	var jsonResp Response_N43
 	if err := json.Unmarshal(body, &jsonResp); err != nil {
 		log.Printf("解析 JSON 失败: %v\n", err)
 		return
@@ -75,15 +75,13 @@ func init() {
 
 	engine.OnLaunch(func() {
 		for page := 1; page <= 103; page++ { //设置最大页数量
-			FetchAndVisitArticles(engine, page)
+			FetchAndVisitArticlesN43(engine, page)
 		}
 	})
 
 	engine.OnHTML("div.content-detail > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		if ctx.PageType == crawlers.News {
-			if !strings.Contains(element.Text, "English version") {
-				ctx.Content += element.Text
-			}
+			ctx.Content += strings.Join(strings.Fields(element.Text), " ")
 		}
 	})
 }

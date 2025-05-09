@@ -13,15 +13,15 @@ import (
 	"github.com/gocolly/colly/v2"
 )
 
-type Response struct {
-	Results []ResultItem `json:"results"`
+type Response_N17 struct {
+	Results []ResultItem_N17 `json:"results"`
 }
 
-type ResultItem struct {
+type ResultItem_N17 struct {
 	Alias string `json:"alias"`
 }
 
-func FetchAndVisitArticles(engine *crawlers.WebsiteEngine, page int) {
+func FetchAndVisitArticlesN17(engine *crawlers.WebsiteEngine, page int) {
 	url := fmt.Sprintf("https://theedgemalaysia.com/api/loadMoreCategories?offset=%d&categories=news", page)
 	resp, err := http.Get(url)
 	if err != nil {
@@ -36,7 +36,7 @@ func FetchAndVisitArticles(engine *crawlers.WebsiteEngine, page int) {
 		return
 	}
 
-	var jsonResp Response
+	var jsonResp Response_N17
 	if err := json.Unmarshal(body, &jsonResp); err != nil {
 		log.Printf("解析 JSON 失败: %v\n", err)
 		return
@@ -69,7 +69,7 @@ func init() {
 
 	engine.OnLaunch(func() {
 		for page := 14; page <= 40000; page += 10 {
-			FetchAndVisitArticles(engine, page)
+			FetchAndVisitArticlesN17(engine, page)
 		}
 	})
 
