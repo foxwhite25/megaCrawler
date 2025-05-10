@@ -9,12 +9,11 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("z-0035", "PICRC.ORG", "https://picrc.org/")
-
-	engine.SetStartingURLs([]string{"https://picrc.org/news/"})
+	engine := crawlers.Register("z-0049", "FNU", "https://www.fnu.ac.fj/")
+	engine.SetStartingURLs([]string{"https://www.fnu.ac.fj/news-events/news-hub/"})
 
 	extractorConfig := extractors.Config{
-		Author:       true,
+		Author:       false,
 		Image:        true,
 		Language:     true,
 		PublishDate:  false,
@@ -25,7 +24,7 @@ func init() {
 	}
 
 	extractorConfig.Apply(engine)
-	engine.OnHTML("div.newsBox > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("h5.font-weight-bold > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
 	engine.OnHTML("a.next", func(element *colly.HTMLElement, ctx *crawlers.Context) {
@@ -36,10 +35,10 @@ func init() {
 		}
 		engine.Visit(url.String(), crawlers.Index)
 	})
-	engine.OnHTML("div.postDate", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("small.posted-on", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.PublicationTime = strings.TrimSpace(element.Text)
 	})
-	engine.OnHTML("div.textArea > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.text-justify > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 }

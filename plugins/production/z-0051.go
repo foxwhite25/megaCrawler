@@ -3,21 +3,20 @@ package production
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	engine := crawlers.Register("z-0035", "PICRC.ORG", "https://picrc.org/")
+	engine := crawlers.Register("z-0051", "COOKISLANDS", "https://www.cookislandsnews.com/")
 
-	engine.SetStartingURLs([]string{"https://picrc.org/news/"})
+	engine.SetStartingURLs([]string{"https://www.cookislandsnews.com/national/"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
 		Image:        true,
 		Language:     true,
-		PublishDate:  false,
+		PublishDate:  true,
 		Tags:         true,
 		Text:         false,
 		Title:        true,
@@ -25,10 +24,10 @@ func init() {
 	}
 
 	extractorConfig.Apply(engine)
-	engine.OnHTML("div.newsBox > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.contentstyle-postthumb > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-	engine.OnHTML("a.next", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("a.btn-smallnext", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		url, err := element.Request.URL.Parse(element.Attr("href"))
 		if err != nil {
 			crawlers.Sugar.Error(err.Error())
@@ -36,10 +35,7 @@ func init() {
 		}
 		engine.Visit(url.String(), crawlers.Index)
 	})
-	engine.OnHTML("div.postDate", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.PublicationTime = strings.TrimSpace(element.Text)
-	})
-	engine.OnHTML("div.textArea > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.usercontent > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 }
