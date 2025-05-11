@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
@@ -8,13 +8,13 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("z-0061", "DOMANIN", "https://domainincite.com/")
+	engine := crawlers.Register("z-0055", "每日星报", "https://www.thedailystar.net/")
 
-	engine.SetStartingURLs([]string{"https://domainincite.com/"})
+	engine.SetStartingURLs([]string{"https://www.thedailystar.net/news"})
 
 	extractorConfig := extractors.Config{
-		Author:       true,
-		Image:        false,
+		Author:       false,
+		Image:        true,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
@@ -24,10 +24,10 @@ func init() {
 	}
 
 	extractorConfig.Apply(engine)
-	engine.OnHTML("div.single > h2 > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("h3.title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-	engine.OnHTML("a.nextpostslink", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("li.pager-show-more-next > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		url, err := element.Request.URL.Parse(element.Attr("href"))
 		if err != nil {
 			crawlers.Sugar.Error(err.Error())
@@ -35,7 +35,7 @@ func init() {
 		}
 		engine.Visit(url.String(), crawlers.Index)
 	})
-	engine.OnHTML("div.single > p > strong , div.single > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(" p.rtejustify,div.clearfix > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 }

@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
@@ -9,12 +9,12 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("z-0059", "AIST", "https://www.aist.go.jp/")
+	engine := crawlers.Register("z-0053", "WETWORD", "https://www.westword.com/")
 
-	engine.SetStartingURLs([]string{"https://www.aist.go.jp/aist_e/news/topics/l_news_topics.html?PageNo=1"})
+	engine.SetStartingURLs([]string{"https://www.westword.com/denver/ArticleArchives?section=5051089"})
 
 	extractorConfig := extractors.Config{
-		Author:       false,
+		Author:       true,
 		Image:        false,
 		Language:     true,
 		PublishDate:  false,
@@ -25,10 +25,10 @@ func init() {
 	}
 
 	extractorConfig.Apply(engine)
-	engine.OnHTML("p.newsTitle > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("li.fdn-pres-item > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-	engine.OnHTML("a.next", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("fdn-page-navigation-prev-next", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		url, err := element.Request.URL.Parse(element.Attr("href"))
 		if err != nil {
 			crawlers.Sugar.Error(err.Error())
@@ -36,10 +36,10 @@ func init() {
 		}
 		engine.Visit(url.String(), crawlers.Index)
 	})
-	engine.OnHTML("div.contents_text > p,div.newsDescription > p,div.newsDescription > div > p,div.contents > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.fdn-content-body", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
-	engine.OnHTML("p.newsDate", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnXML("//*[@id=\"ContentDefault\"]/div/div[3]/div/div[1]/div[1]/div/div/div[4]/div[2]/text()", func(element *colly.XMLElement, ctx *crawlers.Context) {
 		ctx.PublicationTime = strings.TrimSpace(element.Text)
 	})
 }

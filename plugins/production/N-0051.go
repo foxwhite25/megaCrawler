@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
@@ -9,9 +9,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("X0060", "Patent Law Practice Center", "https://patentlawcenter.pli.edu/")
+	engine := crawlers.Register("N-0051", "Voice of Democracy", "https://vodenglish.news/")
 
-	engine.SetStartingURLs([]string{"https://patentlawcenter.pli.edu/wp-sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://vodenglish.news/sitemap_index.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -27,16 +27,14 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Text, "posts-post") {
+		if strings.Contains(element.Text, "/post-sitemap") {
 			engine.Visit(element.Text, crawlers.Index)
-		} else if strings.Contains(element.Text, "/20") {
+		} else if !strings.Contains(element.Text, ".xml") {
 			engine.Visit(element.Text, crawlers.News)
 		}
 	})
 
-	engine.OnHTML(".entry > p:not(:last-child)", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		element.DOM.Find("a").Remove()
-		directText := element.DOM.Text()
-		ctx.Content += directText
+	engine.OnHTML("#wtr-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
 	})
 }
