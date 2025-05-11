@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("X0052", "新喀里多尼亚矿业与地质局", "https://dimenc.gouv.nc/")
+	engine := crawlers.Register("X0056", "白宫", "https://www.whitehouse.gov/")
 
-	engine.SetStartingURLs([]string{"https://dimenc.gouv.nc/actualites"})
+	engine.SetStartingURLs([]string{"https://www.whitehouse.gov/news/"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -25,17 +25,17 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML("h2 > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".wp-block-post-title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Visit(element.Attr("href"), crawlers.News)
 	})
 
-	engine.OnHTML(".field--name-body > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".entry-content > :not(div), .field--name-body > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		element.DOM.Find("a").Remove()
 		directText := element.DOM.Text()
 		ctx.Content += directText
 	})
 
-	engine.OnHTML(".pager__item--next > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".wp-block-query-pagination-numbers + a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Visit(element.Attr("href"), crawlers.Index)
 	})
 }
