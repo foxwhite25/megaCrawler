@@ -1,4 +1,4 @@
-package production
+package dev
 
 import (
 	"megaCrawler/crawlers"
@@ -13,8 +13,8 @@ func init() {
 	engine.SetStartingURLs([]string{"https://www.manilatimes.net/news"})
 
 	extractorConfig := extractors.Config{
-		Author:       true,
-		Image:        true,
+		Author:       false,
+		Image:        false,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
@@ -31,6 +31,10 @@ func init() {
 
 	engine.OnHTML(".item", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
+	})
+
+	engine.OnHTML("div.author-info > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Authors = append(ctx.Authors, element.Attr("title"))
 	})
 
 	engine.OnHTML(".article-body-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
