@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
@@ -8,15 +8,15 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("N-0067", "Chain Drug Review", "https://chaindrugreview.com/")
+	engine := crawlers.Register("smj-015", "Danske_Bank", "https://danskebank.com/")
 
-	engine.SetStartingURLs([]string{"https://chaindrugreview.com/sitemap-posts.xml"})
+	engine.SetStartingURLs([]string{"https://danskebank.com/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
-		Author:       true,
+		Author:       false,
 		Image:        false,
 		Language:     true,
-		PublishDate:  true,
+		PublishDate:  false,
 		Tags:         true,
 		Text:         false,
 		Title:        true,
@@ -29,11 +29,11 @@ func init() {
 		engine.Visit(element.Text, crawlers.News)
 	})
 
-	engine.OnHTML("div.c-byline.c-topper__byline > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Authors = append(ctx.Authors, element.Text)
+	engine.OnHTML("div.article-meta", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.PublicationTime = element.Text
 	})
 
-	engine.OnHTML("div.c-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".article-content,p.article-subheadline", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 }

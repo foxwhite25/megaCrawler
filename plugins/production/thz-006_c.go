@@ -40,7 +40,7 @@ func init() {
 	})
 
 	engine.OnHTML("div.rich-html > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		engine.element += element.Text
+		ctx.Content += element.Text
 	})
 
 }

@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("N-0061", "Carlos Eats", "https://carloseats.com/")
+	engine := crawlers.Register("mwq-012", "Financier Worldwide", "https://www.financierworldwide.com")
 
-	engine.SetStartingURLs([]string{"https://carloseats.com/sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://www.financierworldwide.com/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -29,7 +29,8 @@ func init() {
 		engine.Visit(element.Text, crawlers.News)
 	})
 
-	engine.OnHTML("div.entry-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(" div > div > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
+
 }

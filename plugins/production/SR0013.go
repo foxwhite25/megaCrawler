@@ -1,20 +1,21 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	engine := crawlers.Register("N-0068", "City Wealth", "https://www.citywealthmag.com")
+	engine := crawlers.Register("SR0013", "SHAWN E TUMA - Blog", "https://shawnetuma.com/")
 
-	engine.SetStartingURLs([]string{"https://www.citywealthmag.com/post-sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://shawnetuma.com/sitemap-1.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        false,
+		Image:        true,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
@@ -29,7 +30,7 @@ func init() {
 		engine.Visit(element.Text, crawlers.News)
 	})
 
-	engine.OnHTML("div.news-article > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content += element.Text
+	engine.OnHTML("div.entry-content", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content = strings.TrimSpace(element.Text)
 	})
 }
