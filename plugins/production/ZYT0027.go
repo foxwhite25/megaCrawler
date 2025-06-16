@@ -9,9 +9,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("mwq-022", "Domain Incite", "https://domainincite.com")
+	engine := crawlers.Register("ZYT0027", "thepinknews", "https://www.thepinknews.com")
 
-	engine.SetStartingURLs([]string{"https://domainincite.com/sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://www.thepinknews.com/sitemap_index.xml"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -27,14 +27,16 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Text, "/post-sitemap") {
+		if strings.Contains(element.Text, "post-sitemap") {
 			engine.Visit(element.Text, crawlers.Index)
-		} else if !strings.Contains(element.Text, ".xml") {
+		} else if strings.Contains(element.Text, "/20") {
 			engine.Visit(element.Text, crawlers.News)
 		}
 	})
 
-	engine.OnHTML("#content > div.single > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Content += element.Text
+	engine.OnHTML(".article__content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		element.DOM.Find("a").Remove()
+		directText := element.DOM.Text()
+		ctx.Content += directText
 	})
 }

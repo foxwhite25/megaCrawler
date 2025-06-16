@@ -9,12 +9,12 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("mwq-021", "WEEK", "https://www.25newsnow.com")
+	engine := crawlers.Register("mwq-027", "The Nation", "https://www.nation.com.pk/")
 
-	engine.SetStartingURLs([]string{"https://www.25newsnow.com/arc/outboundfeeds/sitemap-section-index/?outputType=xml"})
+	engine.SetStartingURLs([]string{"https://www.nation.com.pk/sitemap.xml"})
 
 	extractorConfig := extractors.Config{
-		Author:       false,
+		Author:       true,
 		Image:        false,
 		Language:     true,
 		PublishDate:  true,
@@ -27,19 +27,14 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Text, "sitemap-section-index") {
+		if strings.Contains(element.Text, "/sitemap_2025-06") {
 			engine.Visit(element.Text, crawlers.Index)
 		} else if !strings.Contains(element.Text, ".xml") {
 			engine.Visit(element.Text, crawlers.News)
 		}
 	})
 
-	engine.OnHTML("article > section > div > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(" div.content-inner.news-detail-content-class > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
-
-	engine.OnHTML(" div > span.author > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.Authors = append(ctx.Authors, element.Text)
-	})
-
 }

@@ -3,15 +3,14 @@ package production
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
-	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	engine := crawlers.Register("mwq-022", "Domain Incite", "https://domainincite.com")
+	engine := crawlers.Register("mwq-029", "The Irish Times", "https://www.irishtimes.com")
 
-	engine.SetStartingURLs([]string{"https://domainincite.com/sitemap.xml"})
+	engine.SetStartingURLs([]string{"https://www.irishtimes.com/arc/outboundfeeds/sitemap/"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -27,14 +26,11 @@ func init() {
 	extractorConfig.Apply(engine)
 
 	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
-		if strings.Contains(element.Text, "/post-sitemap") {
-			engine.Visit(element.Text, crawlers.Index)
-		} else if !strings.Contains(element.Text, ".xml") {
-			engine.Visit(element.Text, crawlers.News)
-		}
+		engine.Visit(element.Text, crawlers.News)
 	})
 
-	engine.OnHTML("#content > div.single > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.c-stack.b-it-right-rail-advanced__main-interior-item-1 > article > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
+
 }
