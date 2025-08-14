@@ -8,16 +8,17 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("08", "Republic of the Philippines PHILIPPINES BOARD OF INVESTMENTS", "www.boi.gov.ph")
+	engine := crawlers.Register("0047", "REPUBLIC OF THE PHILIPPINES DEPARTMENT OF EDUCATION", "https://www.deped.gov.ph/in-the-news/,https://www.deped.gov.ph/official-statements/")
 
 	engine.SetStartingURLs([]string{
-		"https://boi.gov.ph/category/latest-news/"})
+		"https://www.deped.gov.ph/in-the-news/",
+		"https://www.deped.gov.ph/official-statements/"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
 		Image:        true,
 		Language:     true,
-		PublishDate:  false,
+		PublishDate:  true,
 		Tags:         true,
 		Text:         false,
 		Title:        true,
@@ -29,13 +30,10 @@ func init() {
 	engine.OnHTML("h2>a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-	engine.OnHTML("entry-date published", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.PublicationTime = element.Text
-	})
-	engine.OnHTML(".entry-meta~p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".border~p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
-	engine.OnHTML(".nav-previous>a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(`a[aria-label="Next"]`, func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
-	})
+	}) //反引号` 允许字符串内包含双引号
 }
