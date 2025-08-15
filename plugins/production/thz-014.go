@@ -8,14 +8,13 @@ import (
 )
 
 func init() {
+	engine := crawlers.Register("thz-004", "Crenk", "https://crenk.com/")
 
-	engine := crawlers.Register("thz-001", "coyotegulch.Blog", "https://coyotegulch.blog/")
-
-	engine.SetStartingURLs([]string{"https://coyotegulch.blog/"})
+	engine.SetStartingURLs([]string{"https://crenk.com/?s=News/"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        false,
+		Image:        true,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,
@@ -26,15 +25,15 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML(".wp-block-post-title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".post-title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
 
-	engine.OnHTML(".wp-block-query-pagination-numbers > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".nav-links.tw-flex > a+a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
 
-	engine.OnHTML(".entry-content > p,em", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".post-content.tw-clearfix  p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 }

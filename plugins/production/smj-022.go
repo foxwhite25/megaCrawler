@@ -9,9 +9,9 @@ import (
 
 func init() {
 	engine := crawlers.Register("smj-022", "sahel_standard", "https://sahelstandard.com/")
-	
+
 	engine.SetStartingURLs([]string{"https://sahelstandard.com/category/news/"})
-	
+
 	extractorConfig := extractors.Config{
 		Author:       true,
 		Image:        true,
@@ -22,7 +22,7 @@ func init() {
 		Title:        true,
 		TextLanguage: "",
 	}
-	
+
 	extractorConfig.Apply(engine)
 
 	engine.OnHTML(".post-title>a", func(element *colly.HTMLElement, ctx *crawlers.Context) {

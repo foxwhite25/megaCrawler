@@ -8,14 +8,13 @@ import (
 )
 
 func init() {
+	engine := crawlers.Register("thz-011", "Dart-Throwing Chimp", "https://dartthrowingchimp.com/")
 
-	engine := crawlers.Register("thz-001", "coyotegulch.Blog", "https://coyotegulch.blog/")
-
-	engine.SetStartingURLs([]string{"https://coyotegulch.blog/"})
+	engine.SetStartingURLs([]string{"https://dartthrowingchimp.com/"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
-		Image:        false,
+		Image:        true,
 		Language:     true,
 		PublishDate:  true,
 		Tags:         true,

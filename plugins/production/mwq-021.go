@@ -3,17 +3,18 @@ package production
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	engine := crawlers.Register("mwq-021", "Financial It", "https://financialit.net")
+	engine := crawlers.Register("mwq-021", "WEEK", "https://www.25newsnow.com")
 
-	engine.SetStartingURLs([]string{"https://financialit.net/news"})
+	engine.SetStartingURLs([]string{"https://www.25newsnow.com/arc/outboundfeeds/sitemap-section-index/?outputType=xml"})
 
 	extractorConfig := extractors.Config{
-		Author:       true,
+		Author:       false,
 		Image:        false,
 		Language:     true,
 		PublishDate:  true,
@@ -24,32 +25,21 @@ func init() {
 	}
 
 	extractorConfig.Apply(engine)
-	engine.OnHTML(" div.post-info-2 > h4 > a ", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		url, err := element.Request.URL.Parse(element.Attr("href"))
 
-		if err != nil {
-			crawlers.Sugar.Error(err.Error())
-			return
+	engine.OnXML("//loc", func(element *colly.XMLElement, ctx *crawlers.Context) {
+		if strings.Contains(element.Text, "sitemap-section-index") {
+			engine.Visit(element.Text, crawlers.Index)
+		} else if !strings.Contains(element.Text, ".xml") {
+			engine.Visit(element.Text, crawlers.News)
 		}
-		engine.Visit(url.String(), crawlers.News)
 	})
 
-	engine.OnHTML("div > ul > li.pager-next > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		url, err := element.Request.URL.Parse(element.Attr("href"))
-
-		if err != nil {
-			crawlers.Sugar.Error(err.Error())
-			return
-		}
-		engine.Visit(url.String(), crawlers.Index)
-	})
-
-	engine.OnHTML(" div.post_details_block > p > span ", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("article > section > div > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 
-	engine.OnHTML("div > div > ul > li> span", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		ctx.PublicationTime += element.Text
+	engine.OnHTML(" div > span.author > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Authors = append(ctx.Authors, element.Text)
 	})
 
 }
