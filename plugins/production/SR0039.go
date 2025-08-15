@@ -1,0 +1,42 @@
+package production
+
+import (
+	"megaCrawler/crawlers"
+	"megaCrawler/extractors"
+
+	"github.com/gocolly/colly/v2"
+)
+
+func init() {
+	engine := crawlers.Register("SR0039", "Sedibeng Ster", "https://www.citizen.co.za/sedibeng-ster/")
+
+	engine.SetStartingURLs([]string{
+		"https://www.citizen.co.za/sedibeng-ster/local/news/news-news/",
+		"https://www.citizen.co.za/sedibeng-ster/national-news/",
+	})
+
+	extractorConfig := extractors.Config{
+		Author:       true,
+		Image:        false,
+		Language:     true,
+		PublishDate:  true,
+		Tags:         true,
+		Text:         false,
+		Title:        true,
+		TextLanguage: "",
+	}
+
+	extractorConfig.Apply(engine)
+
+	engine.OnHTML("h2 > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		engine.Visit(element.Attr("href"), crawlers.News)
+	})
+
+	engine.OnHTML("div.entry-content.entry.clearfix > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.Content += element.Text
+	})
+
+	engine.OnHTML("span.last-page.first-last-pages > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		engine.Visit(element.Attr("href"), crawlers.Index)
+	})
+}
