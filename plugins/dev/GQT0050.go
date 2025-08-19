@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("0050", "ADAMSON UNIVERSITY", "https://www.adamson.edu.ph/v1/?page=archive&active=3&month=1&years=2018,https://www.adamson.edu.ph/v1/?page=archive&active=3&month=1&years=2019,https://www.adamson.edu.ph/v1/?page=archive&active=3&month=1&years=2020,https://www.adamson.edu.ph/v1/?page=archive&active=3&month=1&years=2021,https://www.adamson.edu.ph/v1/?page=archive&active=3&month=1&years=2022,https://www.adamson.edu.ph/v1/?page=archive&active=3&month=1&years=2023,https://www.adamson.edu.ph/v1/?page=archive&active=3&month=1&years=2024,https://www.adamson.edu.ph/v1/?page=archive&active=3&month=1&years=2025")
+	engine := crawlers.Register("0050", "ADAMSON UNIVERSITY", "www.adamson.edu.ph")
 
 	engine.SetStartingURLs([]string{
 		"https://www.adamson.edu.ph/v1/?page=archive&active=3&month=1&years=2018",

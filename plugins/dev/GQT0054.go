@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("0054", "University of the East Manila Campus", "https://www.ue.edu.ph/mla/?s=a")
+	engine := crawlers.Register("0054", "University of the East Manila Campus", "www.ue.edu.ph")
 
 	engine.SetStartingURLs([]string{
 		"https://www.ue.edu.ph/mla/?s=a"})

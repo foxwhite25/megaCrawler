@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("0049", "MAPUA UNIVERSITY", "https://www.mapua.edu.ph/news")
+	engine := crawlers.Register("0049", "MAPUA UNIVERSITY", "www.mapua.edu.ph")
 
 	engine.SetStartingURLs([]string{
 		"https://www.mapua.edu.ph/news"})
