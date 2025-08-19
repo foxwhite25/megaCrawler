@@ -8,11 +8,10 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("0047", "REPUBLIC OF THE PHILIPPINES DEPARTMENT OF EDUCATION", "www.deped.gov.ph")
+	engine := crawlers.Register("0047", "REPUBLIC OF THE PHILIPPINES DEPARTMENT OF EDUCATION", "https://www.deped.gov.ph/in-the-news/")
 
 	engine.SetStartingURLs([]string{
-		"https://www.deped.gov.ph/in-the-news/",
-		"https://www.deped.gov.ph/official-statements/"})
+		"https://www.deped.gov.ph/in-the-news/"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
