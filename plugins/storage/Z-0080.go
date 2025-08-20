@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("z-0080", "INSIDE", "https://www.imo.org/")
+	engine := crawlers.Register("z-0080", "IMO", "https://www.imo.org/")
 
 	engine.SetStartingURLs([]string{
 		"https://www.imo.org/zh/mediacentre/pressbriefings/pages/2024-archives.aspx",
