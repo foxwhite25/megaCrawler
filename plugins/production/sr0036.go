@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("SR0036", "菲律宾港务局", "https://ppa.com.ph/")
+	engine := crawlers.Register("sr0036", "菲律宾港务局", "https://ppa.com.ph/")
 
 	engine.SetStartingURLs([]string{"https://ppa.com.ph/ppa-news-events"})
 
