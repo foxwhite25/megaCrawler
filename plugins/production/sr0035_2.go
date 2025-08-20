@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("SR0035", "环境与自然资源部海洋处", "https://marina.gov.ph/")
+	engine := crawlers.Register("sr0035_2", "环境与自然资源部海洋处", "https://marina.gov.ph/")
 
 	engine.SetStartingURLs([]string{"https://marina.gov.ph/press-release/"})
 
