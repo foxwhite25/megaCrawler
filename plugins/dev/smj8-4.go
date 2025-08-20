@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("hurry8", "棉兰老州立大学", "https://www.msumain.edu.ph/")
+	engine := crawlers.Register("smj8-4", "棉兰老州立大学", "https://www.msumain.edu.ph/")
 	
 	engine.SetStartingURLs([]string{"https://www.msumain.edu.ph/author/oipp/"})
 	
@@ -39,3 +39,4 @@ func init() {
 		ctx.Authors = append(ctx.Authors, strings.TrimSpace(element.Text))
 	})
 }
+
