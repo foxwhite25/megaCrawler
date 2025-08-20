@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("0050", "ADAMSON UNIVERSITY", "www.adamson.edu.ph")
+	engine := crawlers.Register("GQT0050", "ADAMSON UNIVERSITY", "www.adamson.edu.ph")
 
 	engine.SetStartingURLs([]string{
 		"https://www.adamson.edu.ph/v1/?page=archive&active=3&month=1&years=2018",
