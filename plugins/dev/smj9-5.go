@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("hurry9", "远东大学", "https://www.feu.edu.ph/")
+	engine := crawlers.Register("smj9-5", "远东大学", "https://www.feu.edu.ph/")
 	
 	engine.SetStartingURLs([]string{"https://www.feu.edu.ph/university-news-and-events/"})
 	
@@ -34,3 +34,4 @@ func init() {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
 }
+
