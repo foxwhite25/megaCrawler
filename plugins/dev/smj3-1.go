@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("hurry3", "菲律宾游艇俱乐部", "https://philippineyachting.com/")
+	engine := crawlers.Register("smj3-1", "菲律宾游艇俱乐部", "https://philippineyachting.com/")
 	
 	engine.SetStartingURLs([]string{"https://philippineyachting.com/insights/"})
 	
@@ -38,3 +38,4 @@ func init() {
 	})
 
 }
+
