@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("hurry7", "保护国际菲律宾", "https://www.conservation.org/philippines")
+	engine := crawlers.Register("smj7-3", "保护国际菲律宾", "https://www.conservation.org/philippines")
 	
 	engine.SetStartingURLs([]string{"https://www.conservation.org/sitemap/sitemap.xml"})
 	
@@ -38,3 +38,4 @@ func init() {
 		ctx.PublicationTime += element.Text
 	})
 }
+
