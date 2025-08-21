@@ -1,15 +1,15 @@
 package production
 
 import (
-	"strings"
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	engine := crawlers.Register("SR0037", "Usep", "https://www.usep.edu.ph/")
+	engine := crawlers.Register("sr0037_2", "Usep", "https://www.usep.edu.ph/")
 
 	engine.SetStartingURLs([]string{"https://www.usep.edu.ph/headlines-2/"})
 
@@ -38,7 +38,7 @@ func init() {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
 
-    engine.OnHTML("div#posted_on_by > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div#posted_on_by > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		fullText := strings.TrimSpace(element.Text)
 		parts := strings.Split(fullText, "Posted by: ")
 		if len(parts) > 1 {
