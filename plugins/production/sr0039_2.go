@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("SR0039", "PMAP", "https://pmap.org.ph/")
+	engine := crawlers.Register("sr0039_2", "PMAP", "https://pmap.org.ph/")
 
 	engine.SetStartingURLs([]string{"https://pmap.org.ph/category/hr-news/"})
 
