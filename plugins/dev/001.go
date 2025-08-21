@@ -73,7 +73,7 @@ func init() {
 		}
 	})
 
-	engine.OnHTML("div:nth-child(2) > div > font", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".col-md-8.col-md-offset-2 > div, div:nth-child(2) > div > font", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		element.DOM.Find("div:nth-child(2) > div > font > br").Remove()
 		directText := element.DOM.Text()
 		ctx.Content += directText
