@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("SR0034", "菲律宾大学海洋科学研究所", "https://msi.upd.edu.ph/")
+	engine := crawlers.Register("sr0034_2", "菲律宾大学海洋科学研究所", "https://msi.upd.edu.ph/")
 
 	engine.SetStartingURLs([]string{"https://msi.upd.edu.ph/category/stories/mandaragat-news/"})
 
