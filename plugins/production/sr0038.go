@@ -1,15 +1,15 @@
 package production
 
 import (
-	"strings"
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	engine := crawlers.Register("SR0038", "Philcancer", "https://www.philcancer.org.ph/")
+	engine := crawlers.Register("sr0038", "Philcancer", "https://www.philcancer.org.ph/")
 
 	engine.SetStartingURLs([]string{"https://www.philcancer.org.ph/index.php/updates/latest-news/"})
 
