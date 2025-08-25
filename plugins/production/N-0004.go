@@ -3,6 +3,7 @@ package production
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+	"strings"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -16,7 +17,7 @@ func init() {
 		Author:       true,
 		Image:        false,
 		Language:     true,
-		PublishDate:  true,
+		PublishDate:  false,
 		Tags:         true,
 		Text:         false,
 		Title:        true,
@@ -31,6 +32,10 @@ func init() {
 
 	engine.OnHTML("div.uk-text-center > ul > li > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
+	})
+
+	engine.OnHTML("body > div.tm-page > div:nth-child(3) > div > div > div > div.uk-panel.uk-margin.uk-text-center", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		ctx.PublicationTime = strings.TrimSpace(element.Text)
 	})
 
 	engine.OnHTML("div.uk-panel.uk-text-large > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
