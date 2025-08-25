@@ -8,9 +8,9 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("003", "菲律宾基督教传教服务处", "https://cms.org.ph/")
+	engine := crawlers.Register("thz-0029", " ", "https://oxfam.org.ph/")
 
-	engine.SetStartingURLs([]string{"https://cms.org.ph/articles/"})
+	engine.SetStartingURLs([]string{"https://oxfam.org.ph/category/news/"})
 
 	extractorConfig := extractors.Config{
 		Author:       true,
@@ -25,15 +25,15 @@ func init() {
 
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML(".clickable-container", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".card__title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Visit(element.Attr("href"), crawlers.News)
 	})
 
-	engine.OnHTML(".pr-3.pr-md-5.wow.fadeInDown > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".main-article__content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 
-	engine.OnHTML(".page-numbers", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".pagednav a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
 }

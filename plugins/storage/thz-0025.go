@@ -3,14 +3,15 @@ package dev
 import (
 	"megaCrawler/crawlers"
 	"megaCrawler/extractors"
+
 	"github.com/gocolly/colly/v2"
 )
 
 func init() {
-	engine := crawlers.Register("012", " ", "https://www.pbsp.org.ph/")
-	
-	engine.SetStartingURLs([]string{"https://www.pbsp.org.ph/news"})
-	
+	engine := crawlers.Register("thz-0025", " ", "https://sffi.org.ph/")
+
+	engine.SetStartingURLs([]string{"https://sffi.org.ph/updates-news-announcement/"})
+
 	extractorConfig := extractors.Config{
 		Author:       true,
 		Image:        false,
@@ -21,14 +22,14 @@ func init() {
 		Title:        true,
 		TextLanguage: "",
 	}
-	
+
 	extractorConfig.Apply(engine)
 
-	engine.OnHTML(".div-block-3 > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".elementor-post__read-more-wrapper > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
 
-	engine.OnHTML(".standard-rich-text.w-richtext > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML(".elementor-element.elementor-element-ef0a908.elementor-widget.elementor-widget-theme-post-content > p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
 
