@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("thz-0035", " ", "https://cemap.org.ph/")
+	engine := crawlers.Register("thz-0035", "CeMap", "https://cemap.org.ph/")
 
 	engine.SetStartingURLs([]string{"https://cemap.org.ph/newsroom/news/"})
 

@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("thz-0037", " ", "https://www.ntppool.org/zone/ph")
+	engine := crawlers.Register("thz-0037", "NTP Pool Project", "https://www.ntppool.org/zone/ph")
 
 	engine.SetStartingURLs([]string{"https://news.ntppool.org/post/"})
 

@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("thz-0028", " ", "https://smc.org.ph/")
+	engine := crawlers.Register("thz-0028", "SMC", "https://smc.org.ph/")
 
 	engine.SetStartingURLs([]string{"https://smc.org.ph/index.php/events/"})
 

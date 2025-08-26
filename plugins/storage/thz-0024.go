@@ -1,4 +1,3 @@
-
 package dev
 
 import (
@@ -9,10 +8,10 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("thz-0024", " ", "https://ideals.org.ph/")
-	
+	engine := crawlers.Register("thz-0024", "IDEALS", "https://ideals.org.ph/")
+
 	engine.SetStartingURLs([]string{"https://ideals.org.ph/index.php/stories/"})
-	
+
 	extractorConfig := extractors.Config{
 		Author:       true,
 		Image:        false,
@@ -23,9 +22,9 @@ func init() {
 		Title:        true,
 		TextLanguage: "",
 	}
-	
+
 	extractorConfig.Apply(engine)
-	
+
 	engine.OnHTML(".entry-title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Visit(element.Attr("href"), crawlers.News)
 	})
@@ -37,5 +36,5 @@ func init() {
 	engine.OnHTML(".alignleft > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
-	
+
 }
