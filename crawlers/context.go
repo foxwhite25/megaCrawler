@@ -65,6 +65,15 @@ type Context struct {
 	InstagramID        string     `json:"instagram_id"`
 	WikipediaID        string     `json:"wikipedia_id"`
 	ExpertWebsite      string     `json:"expert_website"`
+	ChannelText        string     `json:"channel_text"`
+	UserURL            string     `json:"user_url"`
+	FirstChannel       string     `json:"first_channel"`
+	SecondChannel      string     `json:"second_channel"`
+	ThirdChannel       string     `json:"third_channel"`
+	Editor             []string   `json:"editor"`
+	UpdatedAt          string     `json:"updated_at"`
+	HitNum             int        `json:"hit_num"`
+	Source             []string   `json:"source"`
 	CrawlTime          time.Time  `json:"crawl_time"`
 	SubContext         []*Context `json:"subContext"`
 
@@ -100,6 +109,15 @@ type news struct {
 	FavoriteCount        int       `json:"favorite_count"`
 	Tags                 []string  `json:"tags"`
 	Keywords             []string  `json:"keywords"`
+	ChannelText          string    `json:"channel_text"`
+	UserURL              string    `json:"user_url"`
+	FirstChannel         string    `json:"first_channel"`
+	SecondChannel        string    `json:"second_channel"`
+	ThirdChannel         string    `json:"third_channel"`
+	Editor               []string  `json:"editor"`
+	UpdatedAt            string    `json:"updated_at"`
+	HitNum               int       `json:"hit_num"`
+	Source               []string  `json:"source"`
 	CrawlTime            time.Time `json:"crawl_time"`
 	CrawlTimestamp       int64     `json:"crawl_timestamp"`
 	StoredTime           time.Time `json:"stored_time"`
@@ -178,6 +196,8 @@ func (ctx *Context) CreateSubContext() (k *Context) {
 		Link:       []string{},
 		Tags:       []string{},
 		Keywords:   []string{},
+		Editor:     []string{},
+		Source:     []string{},
 		SubContext: []*Context{},
 		URL:        ctx.URL,
 		Host:       ctx.Host,
@@ -261,6 +281,15 @@ func (ctx *Context) process(tester *tester.Tester, engine string) (success bool)
 			FavoriteCount:        ctx.FavoriteCount,
 			Tags:                 ctx.Tags,
 			Keywords:             ctx.Keywords,
+			ChannelText:          strings.TrimSpace(ctx.ChannelText),
+			UserURL:              ctx.UserURL,
+			FirstChannel:         strings.TrimSpace(ctx.FirstChannel),
+			SecondChannel:        strings.TrimSpace(ctx.SecondChannel),
+			ThirdChannel:         strings.TrimSpace(ctx.ThirdChannel),
+			Editor:               Unique(ctx.Editor),
+			UpdatedAt:            strings.TrimSpace(ctx.UpdatedAt),
+			HitNum:               ctx.HitNum,
+			Source:               ctx.Source,
 			CrawlTime:            ctx.CrawlTime,
 			CrawlTimestamp:       ctx.CrawlTime.Unix(),
 			StoredTime:           now,
