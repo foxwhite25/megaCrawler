@@ -358,7 +358,7 @@ func newContext(k urlData, w *WebsiteEngine) Context {
 		Tags:       []string{},
 		Keywords:   []string{},
 		Editor:     []string{},
-    Source:     []string{},
+		Source:     []string{},
 		SubContext: []*Context{},
 		URL:        k.URL.String(),
 		Host:       k.URL.Host,

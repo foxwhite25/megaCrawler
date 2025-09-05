@@ -197,7 +197,7 @@ func (ctx *Context) CreateSubContext() (k *Context) {
 		Tags:       []string{},
 		Keywords:   []string{},
 		Editor:     []string{},
-    Source:     []string{},
+		Source:     []string{},
 		SubContext: []*Context{},
 		URL:        ctx.URL,
 		Host:       ctx.Host,
