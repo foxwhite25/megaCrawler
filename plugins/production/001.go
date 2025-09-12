@@ -11,7 +11,7 @@ import (
 	"github.com/gocolly/colly/v2"
 )
 
-func FetchAndVisitArticles(engine *crawlers.WebsiteEngine, page int) {
+func FetchWWFArticles_001(engine *crawlers.WebsiteEngine, page int) {
 
 	startRow := (page-1)*6 + 1
 	endRow := page * 6
@@ -69,12 +69,30 @@ func init() {
 
 	engine.OnLaunch(func() {
 		for page := 1; page <= 100; page++ {
-			FetchAndVisitArticles(engine, page)
+			FetchWWFArticles_001(engine, page)
 		}
 	})
 
-	engine.OnHTML(".col-md-8.col-md-offset-2 > div, div:nth-child(2) > div > font", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		element.DOM.Find("div:nth-child(2) > div > font > br").Remove()
+	engine.OnHTML(".col-sm-7,.col-sm-7  em,.col-sm-7 p+p,", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		element.DOM.Find(".col-sm-7 > p,.col-sm-7 > br,.col-sm-7 > strong").Remove()
+		directText := element.DOM.Text()
+		ctx.Content += directText
+		if ctx.PageType == crawlers.News {
+			ctx.Content += element.Text
+		}
+	})
+
+	engine.OnHTML(".col-sm-7", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		element.DOM.Find(".col-sm-7 > p,.col-sm-7 > div ,.col-sm-7 > strong,.col-sm-7 > br").Remove()
+		directText := element.DOM.Text()
+		ctx.Content += directText
+		if ctx.PageType == crawlers.News {
+			ctx.Content += element.Text
+		}
+	})
+
+	engine.OnHTML(".col-md-8.col-md-offset-2", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		element.DOM.Find(".col-md-8.col-md-offset-2 > p,.col-md-8.col-md-offset-2 > div,.col-md-8.col-md-offset-2 > br").Remove()
 		directText := element.DOM.Text()
 		ctx.Content += directText
 		if ctx.PageType == crawlers.News {
