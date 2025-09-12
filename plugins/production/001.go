@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	"github.com/gocolly/colly/v2"
 )
 
-func FetchWWFArticles(engine *crawlers.WebsiteEngine, page int) {
+func FetchWWFArticles_001(engine *crawlers.WebsiteEngine, page int) {
 
 	startRow := (page-1)*6 + 1
 	endRow := page * 6
@@ -69,7 +69,7 @@ func init() {
 
 	engine.OnLaunch(func() {
 		for page := 1; page <= 100; page++ {
-			FetchWWFArticles(engine, page)
+			FetchWWFArticles_001(engine, page)
 		}
 	})
 
