@@ -36,12 +36,6 @@ func init() {
 		engine.Visit(element.Attr("href"), crawlers.Index)
 	})
 
-	engine.OnHTML("div.mtn > div.xg1", func(element *colly.HTMLElement, ctx *crawlers.Context) {
-		re := regexp.MustCompile(`\d{4}-\d{1,2}-\d{1,2}`) //时间正则表达式
-		matchs := re.FindStringSubmatch(element.Text)
-		ctx.PublicationTime = strings.Join(matchs, "")
-	})
-
 	engine.OnHTML("td.t_f", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		content := ""
 
@@ -53,5 +47,11 @@ func init() {
 			content += s.Text()
 		})
 		ctx.Content += content
+	})
+
+	engine.OnHTML("div.post_t > div > div", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+		re := regexp.MustCompile(`\d{4}-\d{1,2}-\d{1,2}`) //时间正则表达式
+		matchs := re.FindStringSubmatch(element.Text)
+		ctx.PublicationTime = strings.Join(matchs, "")
 	})
 }
