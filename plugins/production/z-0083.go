@@ -1,4 +1,4 @@
-package dev
+package production
 
 import (
 	"megaCrawler/crawlers"
@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("z-0082", "INSIDE", "https://caritas.org.ph/")
+	engine := crawlers.Register("z-0083", "INSIDE", "https://caritas.org.ph/")
 
 	engine.SetStartingURLs([]string{"https://caritas.org.ph/?s=news&et_pb_searchform_submit=et_search_proccess&et_pb_include_posts=yes&et_pb_include_pages=yes"})
 	extractorConfig := extractors.Config{
@@ -26,7 +26,7 @@ func init() {
 	engine.OnHTML("a.entry-featured-image-url", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		engine.Visit(element.Attr("href"), crawlers.News)
 	})
-	engine.OnHTML("h2.entry-title > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("div.alignleft > a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		url, err := element.Request.URL.Parse(element.Attr("href"))
 		if err != nil {
 			crawlers.Sugar.Error(err.Error())
