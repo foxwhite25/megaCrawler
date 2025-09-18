@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("GQT0062", "Smart", "https://blog.smart.com.ph/current-events/,https://blog.smart.com.ph/lifestyle/,https://blog.smart.com.ph/pop-culture/,https://blog.smart.com.ph/music/,https://blog.smart.com.ph/sports/,https://blog.smart.com.ph/gaming/")
+	engine := crawlers.Register("GQT0062", "Smart", "blog.smart.com.ph")
 
 	engine.SetStartingURLs([]string{
 		"https://blog.smart.com.ph/current-events/",
