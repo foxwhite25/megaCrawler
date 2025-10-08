@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	engine := crawlers.Register("GQT0075", "ZBNI", "https://zbni.ph/category/latest/")
+	engine := crawlers.Register("GQT0075", "ZBNI", "zbni.ph")
 
 	engine.SetStartingURLs([]string{
 		"https://zbni.ph/category/latest/"})
@@ -44,7 +44,7 @@ func init() {
 	engine.OnHTML(".entry-content>p", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Content += element.Text
 	})
-	engine.OnHTML("source+img", func(element *colly.HTMLElement, ctx *crawlers.Context) {
+	engine.OnHTML("picture>source+img", func(element *colly.HTMLElement, ctx *crawlers.Context) {
 		ctx.Image = []string{element.Attr("src")}
 	})
 	engine.OnHTML("h2>a", func(element *colly.HTMLElement, ctx *crawlers.Context) {
